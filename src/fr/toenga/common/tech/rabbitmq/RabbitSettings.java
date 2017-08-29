@@ -17,6 +17,9 @@ public class RabbitSettings
 	private String		username;
 	private String		virtualHost;
 	private String		password;
+	private boolean		automaticRecovery;
+	private int			connectionTimeout;
+	private int			requestedHeartbeat;
 
 	ConnectionFactory getFactory() 
 	{
@@ -27,9 +30,9 @@ public class RabbitSettings
 		connectionFactory.setUsername(getUsername());
 		connectionFactory.setVirtualHost(getVirtualHost());
 		connectionFactory.setPassword(getPassword());
-		connectionFactory.setAutomaticRecoveryEnabled(true);
-		connectionFactory.setConnectionTimeout(60000);
-		connectionFactory.setRequestedHeartbeat(60);
+		connectionFactory.setAutomaticRecoveryEnabled(isAutomaticRecovery());
+		connectionFactory.setConnectionTimeout(getConnectionTimeout());
+		connectionFactory.setRequestedHeartbeat(getRequestedHeartbeat());
 		return connectionFactory;
 	}
 

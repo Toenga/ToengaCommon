@@ -23,6 +23,7 @@ public class RabbitService extends AutoReconnector
 	private ConnectionFactory		connectionFactory;
 	private Connection				connection;
 	private	Channel					channel;
+	private boolean					dead;
 
 	private List<RabbitListener>	listeners = new ArrayList<>();
 
@@ -39,6 +40,16 @@ public class RabbitService extends AutoReconnector
 		listener.load();
 		listeners.add(listener);
 		return this;
+	}
+	
+	public void remove()
+	{
+		setDead(true);
+	}
+	
+	public boolean isAlive()
+	{
+		return !isDead();
 	}
 
 	@Override
