@@ -2,7 +2,7 @@ package fr.toenga.common.tech;
 
 import java.util.TimerTask;
 
-import fr.toenga.common.utils.logs.TimerUtils;
+import fr.toenga.common.utils.threading.TimerUtils;
 
 public abstract class AutoReconnector extends TimerTask 
 {

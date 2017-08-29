@@ -1,4 +1,4 @@
-package fr.toenga.common.utils.logs;
+package fr.toenga.common.utils.threading;
 
 import java.util.Timer;
 

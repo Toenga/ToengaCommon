@@ -8,7 +8,7 @@ import org.apache.commons.net.ntp.TimeInfo;
 
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
-import fr.toenga.common.utils.logs.TimerUtils;
+import fr.toenga.common.utils.threading.TimerUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
