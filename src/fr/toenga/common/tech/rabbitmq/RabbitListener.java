@@ -19,7 +19,7 @@ public abstract class RabbitListener
 	private RabbitListenerType	type;
 	private boolean				debug;
 	@Setter private Consumer	consumer;
-
+	
 	public void load()
 	{
 		try {
@@ -36,7 +36,7 @@ public abstract class RabbitListener
 						channel.queueBind(tempQueueName, getName(), "");
 						break;
 					default:
-						Log.log(LogType.ERROR, "Unknown subscriber.");
+						Log.log(LogType.ERROR, "Unknown listener type.");
 					}
 					setConsumer(new RabbitConsumer(channel, this));
 					channel.basicConsume(getName(), true, getConsumer());
