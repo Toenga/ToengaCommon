@@ -40,6 +40,10 @@ public class RedisService extends AutoReconnector
 		setQueue(new ConcurrentLinkedDeque<>());
 		setThreads(new ArrayList<>());
 		reconnect();
+		for (int i=0;i<settings.getWorkerThreads();i++)
+		{
+			getThreads().add(new RedisThread(this, i));
+		}
 	}
 	
 	public void sendSyncPacket(RedisMethod redisMethod) throws Exception

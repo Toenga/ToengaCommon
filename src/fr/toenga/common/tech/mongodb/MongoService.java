@@ -1,12 +1,19 @@
 package fr.toenga.common.tech.mongodb;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
 import fr.toenga.common.tech.AutoReconnector;
+import fr.toenga.common.tech.mongodb.methods.MongoMethod;
 import fr.toenga.common.tech.mongodb.setting.MongoSettings;
+import fr.toenga.common.tech.mongodb.threading.MongoThread;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
 import lombok.Getter;
@@ -16,30 +23,66 @@ import lombok.Setter;
 {
 
 	private		String						name;
-	private		MongoSettings				credentials;
+	private		MongoSettings				settings;
 	private		MongoClient					mongoClient;
 	private		boolean						isDead;
 	private     DB							db;
 	private		Random						random;
+	private 	List<MongoThread>			threads;
+	private		Queue<MongoMethod>			queue;
 
-	public MongoService(String name, MongoSettings credentials)
+	public MongoService(String name, MongoSettings settings)
 	{
-		this.setCredentials(credentials);
+		this.setSettings(settings);
 		this.setName(name);
 		this.setRandom(new Random());
+		this.setThreads(new ArrayList<>());
+		this.setQueue(new ConcurrentLinkedDeque<>());
 		// Connect
 		this.reconnect();
+		// Load threads
+		for (int i=0;i<getSettings().getWorkerThreads();i++)
+		{
+			getThreads().add(new MongoThread(this, i));
+		}
 	}
 
+	public void useAsyncMongo(MongoMethod mongoMethod)
+	{
+		getQueue().add(mongoMethod);
+		dislogeQueue();
+	}
+
+	private void dislogeQueue()
+	{
+		Optional<MongoThread> availableThread = getAvailableThread();
+		if (isUnreachable(availableThread))
+		{
+			return;
+		}
+		MongoThread thread = availableThread.get();
+		thread.stirHimself();
+	}
+	
+	private boolean isUnreachable(Optional<?> optional)
+	{
+		return optional == null || !optional.isPresent();
+	}
+	
+	private Optional<MongoThread> getAvailableThread()
+	{
+		return threads.stream().filter(thread -> thread.canHandlePacket()).findAny();
+	}
+	
 	@SuppressWarnings("deprecation")
 	private void loadMongo()
 	{
 		try
 		{
-			String[] hostnames = getCredentials().getHostnames();
+			String[] hostnames = getSettings().getHostnames();
 			int hostnameId = getRandom().nextInt(hostnames.length);
-			setMongoClient(new MongoClient(hostnames[hostnameId], getCredentials().getPort()));
-			setDb(client().getDB(getCredentials().getDatabase()));
+			setMongoClient(new MongoClient(hostnames[hostnameId], getSettings().getPort()));
+			setDb(client().getDB(getSettings().getDatabase()));
 		} 
 		catch (Exception e)
 		{
@@ -57,6 +100,11 @@ import lombok.Setter;
 		return this.getMongoClient();
 	}
 
+	public boolean isAlive()
+	{
+		return !isDead();
+	}
+	
 	public void remove() 
 	{
 		if (isDead())

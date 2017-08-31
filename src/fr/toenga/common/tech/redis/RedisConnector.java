@@ -37,9 +37,9 @@ import lombok.Setter;
 	 * @param database 	  > database id which will be used
 	 * @return a RedisSettings object
 	 */
-	public RedisSettings createSettings(String[] hostnames, int port, String password, int database)
+	public RedisSettings createSettings(String[] hostnames, int port, String password, int database, int workerThreads)
 	{
-		return new RedisSettings(hostnames, port, password, database);
+		return new RedisSettings(hostnames, port, password, database, workerThreads);
 	}
 	
 	/**

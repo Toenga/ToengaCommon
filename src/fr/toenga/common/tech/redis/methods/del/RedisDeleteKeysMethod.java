@@ -1,5 +1,6 @@
-package fr.toenga.common.tech.redis.methods;
+package fr.toenga.common.tech.redis.methods.del;
 
+import fr.toenga.common.tech.redis.methods.RedisMethod;
 import fr.toenga.common.utils.data.Callback;
 import lombok.AllArgsConstructor;
 import lombok.Data;

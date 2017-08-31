@@ -1,8 +1,9 @@
-package fr.toenga.common.tech.redis.methods;
+package fr.toenga.common.tech.redis.methods.get;
 
 import java.lang.reflect.Type;
 
 import fr.toenga.common.tech.redis.RedisService;
+import fr.toenga.common.tech.redis.methods.RedisMethod;
 import fr.toenga.common.utils.data.Callback;
 import lombok.AllArgsConstructor;
 import lombok.Data;
