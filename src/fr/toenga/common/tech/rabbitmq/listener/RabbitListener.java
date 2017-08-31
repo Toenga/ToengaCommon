@@ -23,11 +23,16 @@ public abstract class RabbitListener
 
 	public void load()
 	{
-		try {
-			if (!getRabbitService().isAlive()) return;
+		try
+		{
+			if (!getRabbitService().isAlive()) 
+			{
+				return;
+			}
 			Channel channel = getRabbitService().getChannel();
 			String finalQueueName = getName();
-			switch (getType()) {
+			switch (getType()) 
+			{
 			case MESSAGE_BROKER:
 				channel.queueDeclare(getName(), false, false, false, null);
 				break;
@@ -42,7 +47,9 @@ public abstract class RabbitListener
 			setConsumer(new RabbitListenerConsumer(channel, this));
 			channel.basicConsume(finalQueueName, true, getConsumer());
 			Log.log(LogType.SUCCESS, "[RabbitConnector] Loaded listener from " + getName() + " (" + getClass().getSimpleName() + ").");
-		}catch(Exception error) {
+		}
+		catch(Exception error) 
+		{
 			Log.log(LogType.ERROR, "[RabbitConnector] Error during a listener bind.");
 			error.printStackTrace();
 		}
