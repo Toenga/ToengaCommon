@@ -2,28 +2,32 @@ package fr.toenga.common.tech.rabbitmq;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class RabbitPacketManager 
 {
 
-	@Getter private static RabbitPacketManager	instance	= new RabbitPacketManager(32);
+	private static Map<RabbitService, RabbitPacketManager>	instances		= new ConcurrentHashMap<>();
 	
-	private List<RabbitThread>					threads		= new ArrayList<>();
-	private	Queue<RabbitPacket>					queue		= new ConcurrentLinkedDeque<>();
-	private boolean								dead		= false;
+	private List<RabbitThread>								threads			= new ArrayList<>();
+	private	Queue<RabbitPacket>								queue			= new ConcurrentLinkedDeque<>();
+	private boolean											dead			= false;
+	private RabbitService									rabbitService;
+
 	
-	RabbitPacketManager(int threads)
+	RabbitPacketManager(RabbitService rabbitService)
 	{
-		for(int i=0;i<threads;i++)
+		setRabbitService(rabbitService);
+		for(int i=0;i<rabbitService.getSettings().getWorkerThreads();i++)
 		{
 			getThreads().add(new RabbitThread(this, i));
 		}
@@ -53,8 +57,19 @@ public class RabbitPacketManager
 		return threads.stream().filter(thread -> thread.canHandlePacket()).findAny();
 	}
 
-	public boolean isAlive() {
+	public boolean isAlive() 
+	{
 		return !isDead();
+	}
+
+	public static RabbitPacketManager getInstance(RabbitService rabbitService) 
+	{
+		RabbitPacketManager packetManager = instances.get(rabbitService);
+		if (packetManager == null) 
+		{
+			packetManager = new RabbitPacketManager(rabbitService);
+		}
+		return packetManager;
 	}
 	
 }

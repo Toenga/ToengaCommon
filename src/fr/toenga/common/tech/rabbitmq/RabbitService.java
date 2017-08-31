@@ -24,6 +24,7 @@ public class RabbitService extends AutoReconnector
 	private Connection				connection;
 	private	Channel					channel;
 	private boolean					dead;
+	private RabbitPacketManager		packetManager;
 
 	private List<RabbitListener>	listeners = new ArrayList<>();
 
@@ -32,6 +33,7 @@ public class RabbitService extends AutoReconnector
 		setName(name);
 		setSettings(settings);
 		setConnectionFactory(settings.getFactory());
+		setPacketManager(getPacketManager(this));
 		reconnect();
 	}
 
@@ -44,7 +46,7 @@ public class RabbitService extends AutoReconnector
 	
 	public void sendPacket(RabbitPacket rabbitPacket)
 	{
-		RabbitPacketManager.getInstance().sendPacket(rabbitPacket);
+		RabbitPacketManager.getInstance(this).sendPacket(rabbitPacket);
 	}
 	
 	public void remove()
@@ -85,6 +87,11 @@ public class RabbitService extends AutoReconnector
 			setConnectionFactory(settings.getFactory());
 			Log.log(LogType.ERROR, "Unable to connect to RabbitMQ service. (" + error.getMessage() + ").");
 		}
+	}
+	
+	public static RabbitPacketManager getPacketManager(RabbitService rabbitService)
+	{
+		return RabbitPacketManager.getInstance(rabbitService);
 	}
 
 }

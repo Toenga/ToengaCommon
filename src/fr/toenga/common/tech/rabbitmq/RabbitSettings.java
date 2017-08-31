@@ -20,6 +20,7 @@ public class RabbitSettings
 	private boolean		automaticRecovery;
 	private int			connectionTimeout;
 	private int			requestedHeartbeat;
+	private int			workerThreads			= 32;
 
 	ConnectionFactory getFactory() 
 	{

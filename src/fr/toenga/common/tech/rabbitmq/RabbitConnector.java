@@ -33,9 +33,9 @@ public class RabbitConnector
 	 * @param password	  > the password of that account
 	 * @return a RabbitSettings object
 	 */
-	public RabbitSettings createSettings(String[] hostnames, int port, String username, String virtualHost, String password, boolean automaticRecovery, int connectionTimeout, int requestedHeartbeat)
+	public RabbitSettings createSettings(String[] hostnames, int port, String username, String virtualHost, String password, boolean automaticRecovery, int connectionTimeout, int requestedHeartbeat, int workerThreads)
 	{
-		return new RabbitSettings(hostnames, port, username, virtualHost, password, automaticRecovery, connectionTimeout, requestedHeartbeat);
+		return new RabbitSettings(hostnames, port, username, virtualHost, password, automaticRecovery, connectionTimeout, requestedHeartbeat, workerThreads);
 	}
 	
 	/**
