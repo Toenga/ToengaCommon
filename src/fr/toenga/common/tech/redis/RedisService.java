@@ -1,13 +1,18 @@
 package fr.toenga.common.tech.redis;
 
-import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import com.google.gson.Gson;
 
 import fr.toenga.common.tech.AutoReconnector;
+import fr.toenga.common.tech.redis.methods.RedisMethod;
 import fr.toenga.common.tech.redis.setting.RedisSettings;
-import fr.toenga.common.utils.data.Callback;
+import fr.toenga.common.tech.redis.threading.RedisThread;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
 import lombok.Data;
@@ -20,123 +25,55 @@ public class RedisService extends AutoReconnector
 {
 
 	private		String						name;
-	private		RedisSettings				credentials;
+	private		RedisSettings				settings;
 	private		Jedis						jedis;
-	private		boolean						isDead;
+	private		boolean						dead;
 	private		Random						random;
+	private		Queue<RedisMethod>			queue;
+	private		List<RedisThread>			threads;
 
-	public RedisService(String name, RedisSettings credentials) 
+	public RedisService(String name, RedisSettings settings) 
 	{
-		setCredentials(credentials);
+		setSettings(settings);
 		setName(name);
 		setRandom(new Random());
+		setQueue(new ConcurrentLinkedDeque<>());
+		setThreads(new ArrayList<>());
 		reconnect();
 	}
-
-	public void setAsync(String key, String value)
+	
+	public void sendSyncPacket(RedisMethod redisMethod) throws Exception
 	{
-		new Thread() 
+		redisMethod.work(this);
+	}
+	
+	public void sendAsyncPacket(RedisMethod redisMethod)
+	{
+		getQueue().add(redisMethod);
+		dislogeQueue();
+	}
+
+	private void dislogeQueue()
+	{
+		Optional<RedisThread> availableThread = getAvailableThread();
+		if (isUnreachable(availableThread))
 		{
-			@Override
-			public void run() 
-			{
-				set(key, value);
-			}
-		}.start();
+			return;
+		}
+		RedisThread thread = availableThread.get();
+		thread.stirHimself();
 	}
-
-	public void setAsync(String key, Object value, boolean indented)
+	
+	private boolean isUnreachable(Optional<?> optional)
 	{
-		new Thread() 
-		{
-			@Override
-			public void run() 
-			{
-				set(key, value, indented);
-			}
-		}.start();
+		return optional == null || !optional.isPresent();
 	}
-
-	public void set(String key, String value) 
+	
+	private Optional<RedisThread> getAvailableThread()
 	{
-		getJedis().set(key, value);
+		return threads.stream().filter(thread -> thread.canHandlePacket()).findAny();
 	}
-
-	public void set(String key, Object value, boolean indented) 
-	{
-		set(key, getGson(indented).toJson(value));
-	}
-
-	public <T> void getSyncObject(String key, Class<T> clazz, Callback<T> object, boolean indented) 
-	{
-		getSyncString(key, new Callback<String>() 
-		{
-			@Override
-			public void done(String result, Throwable error) 
-			{
-				object.done(getGson(indented).fromJson(result, clazz), null);
-			}
-		});
-	}
-
-	public <T> void getSyncObject(String key, Type type, Callback<T> object, boolean indented)
-	{
-		getSyncString(key, new Callback<String>() 
-		{
-			@Override
-			public void done(String result, Throwable error) 
-			{
-				object.done(getGson(indented).fromJson(result, type), null);
-			}
-		});
-	}
-
-	public void getSyncString(String key, Callback<String> object)
-	{
-		object.done(getJedis().get(key), null);
-	}
-
-	public void getAsyncString(String key, Callback<String> object)
-	{
-		new Thread() 
-		{
-			@Override
-			public void run() 
-			{
-				getSyncString(key, object);
-			}
-		}.start();
-	}
-
-	public <T> void getAsyncObject(String key, Class<T> clazz, Callback<T> object, boolean onlyExpose) 
-	{
-		new Thread() 
-		{
-			@Override
-			public void run() 
-			{
-				getSyncObject(key, clazz, object, onlyExpose);
-			}
-		}.start();
-	}
-
-	public <T> void getAsyncObject(String key, Type type, Callback<T> object, boolean onlyExpose) 
-	{
-		new Thread() 
-		{
-			@Override
-			public void run() 
-			{
-				getSyncObject(key, type, object, onlyExpose);
-			}
-		}.start();
-	}
-
-	public void delete(String... keys) 
-	{
-		getJedis().del(keys);
-	}
-
+	
 	public void remove()
 	{
 		if (isDead())
@@ -162,7 +99,7 @@ public class RedisService extends AutoReconnector
 		Log.log(LogType.SUCCESS, "[RedisConnector] Redis service disconnected (" + (System.currentTimeMillis() - time) + " ms).");
 	}
 
-	private Gson getGson(boolean indented) 
+	public Gson getGson(boolean indented) 
 	{
 		RedisConnector redisConnector = RedisConnector.getInstance();
 		if (indented)
@@ -170,6 +107,10 @@ public class RedisService extends AutoReconnector
 			return redisConnector.getExposeGson();
 		}
 		return redisConnector.getGson();
+	}
+
+	public boolean isAlive() {
+		return !isDead();
 	}
 
 	@Override
@@ -192,11 +133,11 @@ public class RedisService extends AutoReconnector
 		try 
 		{
 			long time = System.currentTimeMillis();
-			String[] hostnames = getCredentials().getHostnames();
+			String[] hostnames = getSettings().getHostnames();
 			int hostnameId = getRandom().nextInt(hostnames.length);
-			setJedis(new Jedis(hostnames[hostnameId], credentials.getPort()));
-			getJedis().auth(getCredentials().getPassword());
-			getJedis().select(getCredentials().getDatabase());
+			setJedis(new Jedis(hostnames[hostnameId], getSettings().getPort()));
+			getJedis().auth(getSettings().getPassword());
+			getJedis().select(getSettings().getDatabase());
 			Log.log(LogType.SUCCESS, "[RedisConnector] Successfully (re)connected to Redis service (" + (System.currentTimeMillis() - time) + " ms).");
 		}
 		catch(Exception error) 

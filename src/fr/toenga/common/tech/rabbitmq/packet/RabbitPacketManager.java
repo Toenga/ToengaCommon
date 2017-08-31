@@ -22,7 +22,6 @@ public class RabbitPacketManager
 	
 	private List<RabbitThread>								threads			= new ArrayList<>();
 	private	Queue<RabbitPacket>								queue			= new ConcurrentLinkedDeque<>();
-	private boolean											dead			= false;
 	private RabbitService									rabbitService;
 
 	
@@ -64,7 +63,7 @@ public class RabbitPacketManager
 
 	public boolean isAlive() 
 	{
-		return !isDead();
+		return !getRabbitService().isDead();
 	}
 
 	public static RabbitPacketManager getInstance(RabbitService rabbitService) 
