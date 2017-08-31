@@ -171,7 +171,8 @@ public enum ChatColor
 	 * @return Associative 
 	 * {
 	 * @link org.bukkit.ChatColo
-	 * } with the given code,
+	 * }
+	 * with the given code,
 	 *     or null if it doesn't exist
 	 */
 	public static ChatColor getByChar(char code)
@@ -186,7 +187,8 @@ public enum ChatColor
 	 * @return Associative
 	 * {
 	 * @link org.bukkit.ChatColor
-	 * } with the given code,
+	 * }
+	 * with the given code,
 	 *     or null if it doesn't exist
 	 */
 	public static ChatColor getByChar(String code)
