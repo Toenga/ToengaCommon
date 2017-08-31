@@ -1,8 +1,9 @@
-package fr.toenga.common.tech.rabbitmq;
+package fr.toenga.common.tech.rabbitmq.listener;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 
+import fr.toenga.common.tech.rabbitmq.RabbitService;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ public abstract class RabbitListener
 					default:
 						Log.log(LogType.ERROR, "Unknown listener type.");
 					}
-					setConsumer(new RabbitConsumer(channel, this));
+					setConsumer(new RabbitListenerConsumer(channel, this));
 					channel.basicConsume(getName(), true, getConsumer());
 					System.out.println("[RabbitConnector] Loaded listener from " + getName() + " (" + getClass().getSimpleName() + ").");
 				}

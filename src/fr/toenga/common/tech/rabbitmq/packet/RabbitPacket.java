@@ -1,14 +1,14 @@
-package fr.toenga.common.tech.rabbitmq;
+package fr.toenga.common.tech.rabbitmq.packet;
 
 import lombok.Getter;
 
 @Getter
 public class RabbitPacket {
 
-	private RabbitMessage		rabbitMessage;
+	private RabbitPacketMessage		rabbitMessage;
 	private String		 		queue;
 	private boolean 			debug;
-	private RabbitEncoder		encoder;
+	private RabbitPacketEncoder		encoder;
 	private RabbitPacketType	type;
 	
 }

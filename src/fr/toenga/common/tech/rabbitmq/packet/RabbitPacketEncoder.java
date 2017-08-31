@@ -1,11 +1,11 @@
-package fr.toenga.common.tech.rabbitmq;
+package fr.toenga.common.tech.rabbitmq.packet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum RabbitEncoder {
+public enum RabbitPacketEncoder {
 
 	UTF8("UTF-8");
 	

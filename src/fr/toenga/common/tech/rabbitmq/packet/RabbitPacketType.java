@@ -1,4 +1,4 @@
-package fr.toenga.common.tech.rabbitmq;
+package fr.toenga.common.tech.rabbitmq.packet;
 
 public enum RabbitPacketType
 {

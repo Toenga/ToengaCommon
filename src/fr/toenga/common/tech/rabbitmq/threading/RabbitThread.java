@@ -1,9 +1,12 @@
-package fr.toenga.common.tech.rabbitmq;
+package fr.toenga.common.tech.rabbitmq.threading;
 
 import java.util.Queue;
 
 import com.rabbitmq.client.Channel;
 
+import fr.toenga.common.tech.rabbitmq.RabbitService;
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacket;
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacketManager;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
 import lombok.Data;

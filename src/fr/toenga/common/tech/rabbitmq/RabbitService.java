@@ -8,6 +8,10 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import fr.toenga.common.tech.AutoReconnector;
+import fr.toenga.common.tech.rabbitmq.listener.RabbitListener;
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacket;
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacketManager;
+import fr.toenga.common.tech.rabbitmq.setting.RabbitSettings;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
 import lombok.Data;
@@ -32,7 +36,7 @@ public class RabbitService extends AutoReconnector
 	{
 		setName(name);
 		setSettings(settings);
-		setConnectionFactory(settings.getFactory());
+		setConnectionFactory(settings.toFactory());
 		setPacketManager(getPacketManager(this));
 		reconnect();
 	}
@@ -84,7 +88,7 @@ public class RabbitService extends AutoReconnector
 		catch(Exception error) 
 		{
 			error.printStackTrace();
-			setConnectionFactory(settings.getFactory());
+			setConnectionFactory(settings.toFactory());
 			Log.log(LogType.ERROR, "Unable to connect to RabbitMQ service. (" + error.getMessage() + ").");
 		}
 	}

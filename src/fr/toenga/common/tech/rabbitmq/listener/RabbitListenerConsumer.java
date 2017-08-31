@@ -1,4 +1,4 @@
-package fr.toenga.common.tech.rabbitmq;
+package fr.toenga.common.tech.rabbitmq.listener;
 
 import java.io.IOException;
 
@@ -7,6 +7,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacketMessage;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
 import lombok.EqualsAndHashCode;
@@ -16,11 +17,11 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 @Getter
 @Setter
-public class RabbitConsumer extends DefaultConsumer {
+public class RabbitListenerConsumer extends DefaultConsumer {
 
 	private RabbitListener	rabbitListener;
 	
-	public RabbitConsumer(Channel channel, RabbitListener rabbitListener) {
+	public RabbitListenerConsumer(Channel channel, RabbitListener rabbitListener) {
 		super(channel);
 		this.setRabbitListener(rabbitListener);
 	}
@@ -30,7 +31,7 @@ public class RabbitConsumer extends DefaultConsumer {
 		String message = new String(body, "UTF-8");
 		if (getRabbitListener().getRabbitService().isDead()) return;
 		try {
-			RabbitMessage rabbitMessage = RabbitMessage.fromJson(message);
+			RabbitPacketMessage rabbitMessage = RabbitPacketMessage.fromJson(message);
 			if (rabbitMessage.isAlive()) {
 				if (getRabbitListener().isDebug()) 
 					Log.log(LogType.DEBUG, "[RabbitConnector] Received packet from " + getRabbitListener().getName() + ": " + rabbitMessage.getMessage());

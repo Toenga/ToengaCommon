@@ -1,19 +1,20 @@
-package fr.toenga.common.tech.rabbitmq;
+package fr.toenga.common.tech.rabbitmq.packet;
 
+import fr.toenga.common.tech.rabbitmq.RabbitConnector;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter public class RabbitMessage {
+@Getter @Setter public class RabbitPacketMessage {
 
 	private long   expire = -1L;
 	private String message;
 
-	public RabbitMessage(long ttl, String message) {
+	public RabbitPacketMessage(long ttl, String message) {
 		if (ttl > 0) setExpire(System.currentTimeMillis() + ttl);
 		setMessage(message);
 	}
 	
-	public RabbitMessage(String message) {
+	public RabbitPacketMessage(String message) {
 		setMessage(message);
 	}
 	
@@ -29,8 +30,8 @@ import lombok.Setter;
 		return RabbitConnector.getInstance().getGson().toJson(this);
 	}
 	
-	public static RabbitMessage fromJson(String message) {
-		return RabbitConnector.getInstance().getGson().fromJson(message, RabbitMessage.class);
+	public static RabbitPacketMessage fromJson(String message) {
+		return RabbitConnector.getInstance().getGson().fromJson(message, RabbitPacketMessage.class);
 	}
 	
 }

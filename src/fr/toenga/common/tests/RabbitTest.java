@@ -2,7 +2,7 @@ package fr.toenga.common.tests;
 
 import fr.toenga.common.tech.rabbitmq.RabbitConnector;
 import fr.toenga.common.tech.rabbitmq.RabbitService;
-import fr.toenga.common.tech.rabbitmq.RabbitSettings;
+import fr.toenga.common.tech.rabbitmq.setting.RabbitSettings;
 
 public class RabbitTest
 {

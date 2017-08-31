@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.gson.Gson;
 
+import fr.toenga.common.tech.rabbitmq.setting.RabbitSettings;
 import lombok.Getter;
 
 /**

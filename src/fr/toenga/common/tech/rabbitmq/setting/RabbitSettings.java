@@ -1,4 +1,4 @@
-package fr.toenga.common.tech.rabbitmq;
+package fr.toenga.common.tech.rabbitmq.setting;
 
 import java.util.Random;
 
@@ -22,7 +22,7 @@ public class RabbitSettings
 	private int			requestedHeartbeat;
 	private int			workerThreads			= 32;
 
-	ConnectionFactory getFactory() 
+	public ConnectionFactory toFactory() 
 	{
 		ConnectionFactory connectionFactory = new ConnectionFactory();
 		Random random = new Random();
