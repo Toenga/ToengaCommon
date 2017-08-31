@@ -61,11 +61,11 @@ import lombok.Setter;
 		try {
 			long time = System.currentTimeMillis();
 			db().getMongo().close();
-			Log.log(LogType.SUCCESS, "[MongoService] Closed MongoDB connection (" + (System.currentTimeMillis() - time) + " ms).");
+			Log.log(LogType.SUCCESS, "[MongoConnector] Closed MongoDB connection (" + (System.currentTimeMillis() - time) + " ms).");
 		}
 		catch(Exception exception) 
 		{
-			Log.log(LogType.ERROR, "[MongoService] Something gone wrong while trying to close MongoDB connection.");
+			Log.log(LogType.ERROR, "[MongoConnector] Something gone wrong while trying to close MongoDB connection.");
 			exception.printStackTrace();
 		}
 		MongoConnector.getInstance().getServices().remove(this.getName());
@@ -98,12 +98,12 @@ import lombok.Setter;
 		{
 			long time = System.currentTimeMillis();
 			this.loadMongo();
-			Log.log(LogType.SUCCESS, "[MongoService] Successfully (re)connected to MongoDB service (" + (System.currentTimeMillis() - time) + " ms).");
+			Log.log(LogType.SUCCESS, "[MongoConnector] Successfully (re)connected to MongoDB service (" + (System.currentTimeMillis() - time) + " ms).");
 		}
 		catch(Exception error) 
 		{
 			error.printStackTrace();
-			Log.log(LogType.ERROR, "[MongoService] Unable to connect to MongoDB service (" + error.getMessage() + ").");
+			Log.log(LogType.ERROR, "[MongoConnector] Unable to connect to MongoDB service (" + error.getMessage() + ").");
 		}
 	}
 
