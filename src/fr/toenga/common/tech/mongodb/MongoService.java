@@ -59,6 +59,11 @@ import lombok.Setter;
 
 	public void remove() 
 	{
+		if (isDead())
+		{
+			Log.log(LogType.ERROR, "[MongoConnector] The service is already dead.");
+			return;
+		}
 		long time = System.currentTimeMillis();
 		setDead(true); // Set dead
 		cancel(); // Cancel AutoReconnector task

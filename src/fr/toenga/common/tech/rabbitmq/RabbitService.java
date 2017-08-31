@@ -53,6 +53,11 @@ public class RabbitService extends AutoReconnector
 
 	public void remove()
 	{
+		if (isDead())
+		{
+			Log.log(LogType.ERROR, "[RabbitConnector] The service is already dead.");
+			return;
+		}
 		long time = System.currentTimeMillis();
 		setDead(true); // Set dead
 		cancel(); // Cancel AutoReconnector task

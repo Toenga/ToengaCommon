@@ -43,7 +43,7 @@ public class RabbitConnector
 	 * Create a new service
 	 * @param serviceName 		> name of the service
 	 * @param rabbitSettings	> credentials
-	 * @return a RabbitService object
+	 * @return a RabbitService object ready to work
 	 */
 	public RabbitService createService(String serviceName, RabbitSettings rabbitSettings)
 	{

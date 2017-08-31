@@ -43,9 +43,9 @@ import lombok.Setter;
 	 * Adding a new service
 	 * @param name 		  		> name of the service
 	 * @param MongoSettings     > credentials
-	 * @return a MongoService ready to work
+	 * @return a MongoService object ready to work
 	 */
-	public MongoService newService(String name, MongoSettings MongoCredentials) 
+	public MongoService createService(String name, MongoSettings MongoCredentials) 
 	{
 		return new MongoService(name, MongoCredentials);
 	}

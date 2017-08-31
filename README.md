@@ -17,6 +17,7 @@ ToengaCommon is a library used for Toenga and Toenga plugins.
 - MariaDB overlay
 - Redis overlay
 - More tools
+- Maven support
 
 ## Contributing
 
