@@ -15,21 +15,19 @@ import lombok.Setter;
 {
 
 	private		String						name;
-	private		MongoCredentials			credentials;
+	private		MongoSettings				credentials;
 	private		MongoClient					mongoClient;
 	private		boolean						isDead;
 	private     DB							db;
 	private		Random						random;
 
-	public MongoService(String name, MongoCredentials credentials)
+	public MongoService(String name, MongoSettings credentials)
 	{
 		this.setCredentials(credentials);
 		this.setName(name);
 		this.setRandom(new Random());
 		// Connect
-		this.loadMongo();
-		MongoConnector.getInstance().getServices().put(this.getName(), this);
-		System.out.println("[MongoConnector] Registered new service (" + name + ")");
+		this.reconnect();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -37,8 +35,9 @@ import lombok.Setter;
 	{
 		try
 		{
-			int hostnameId = getRandom().nextInt(getCredentials().getHostnames().size());
-			setMongoClient(new MongoClient(getCredentials().getHostnames().get(hostnameId), getCredentials().getPort()));
+			String[] hostnames = getCredentials().getHostnames();
+			int hostnameId = getRandom().nextInt(hostnames.length);
+			setMongoClient(new MongoClient(hostnames[hostnameId], getCredentials().getPort()));
 			setDb(client().getDB(getCredentials().getDatabase()));
 		} 
 		catch (Exception e)
@@ -73,12 +72,16 @@ import lombok.Setter;
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean isConnected() {
+	public boolean isConnected() 
+	{
 		// Disgusting method, TODO find something better
-		try {
+		try 
+		{
 			db().getMongo().getDatabaseNames();
 			return true;
-		} catch (Exception exception) {
+		} 
+		catch (Exception exception)
+		{
 			return false;
 		}
 	}
