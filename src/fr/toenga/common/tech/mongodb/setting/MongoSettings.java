@@ -1,4 +1,4 @@
-package fr.toenga.common.tech.mongodb;
+package fr.toenga.common.tech.mongodb.setting;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

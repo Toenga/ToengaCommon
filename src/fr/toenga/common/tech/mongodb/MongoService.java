@@ -6,6 +6,7 @@ import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
 import fr.toenga.common.tech.AutoReconnector;
+import fr.toenga.common.tech.mongodb.setting.MongoSettings;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
 import lombok.Getter;

@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import com.google.gson.Gson;
 
+import fr.toenga.common.tech.mongodb.setting.MongoSettings;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
