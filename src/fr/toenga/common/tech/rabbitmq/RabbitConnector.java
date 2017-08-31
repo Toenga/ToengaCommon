@@ -53,19 +53,22 @@ public class RabbitConnector
 	/**
 	 * Register a new service
 	 * @param rabbitService		> RabbitMQ service
+	 * @return 
 	 */
-	public void registerService(RabbitService rabbitService)
+	public RabbitService registerService(RabbitService rabbitService)
 	{
 		services.put(rabbitService.getName(), rabbitService);
+		return rabbitService;
 	}
 	
 	/**
 	 * Unregister an existing service
 	 * @param rabbitService		> RabbitMQ service
 	 */
-	public void unregisterService(RabbitService rabbitService) 
+	public RabbitService unregisterService(RabbitService rabbitService) 
 	{
 		services.remove(rabbitService.getName());
+		return rabbitService;
 	}
 	
 }

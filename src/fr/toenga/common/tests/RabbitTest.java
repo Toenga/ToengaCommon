@@ -2,8 +2,26 @@ package fr.toenga.common.tests;
 
 import fr.toenga.common.tech.rabbitmq.RabbitConnector;
 import fr.toenga.common.tech.rabbitmq.RabbitService;
+import fr.toenga.common.tech.rabbitmq.listener.RabbitListener;
+import fr.toenga.common.tech.rabbitmq.listener.RabbitListenerType;
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacket;
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacketEncoder;
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacketMessage;
+import fr.toenga.common.tech.rabbitmq.packet.RabbitPacketType;
 import fr.toenga.common.tech.rabbitmq.setting.RabbitSettings;
+import fr.toenga.common.utils.logs.Log;
+import fr.toenga.common.utils.logs.LogType;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+/**
+ * This class is a test class using RabbitConnector of ToengaCommon.
+ * It's an example which can be used.
+ * @author xMalware
+ */
+
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class RabbitTest
 {
 
@@ -22,10 +40,51 @@ public class RabbitTest
 
 	public static void main(String[] args) 
 	{
+		new RabbitTest();	
+	}
+
+	// Object
+	private RabbitService rabbitService;
+
+	private RabbitTest()
+	{
+		// Connect
+		connect();
+		// Create Test listener
+		createTestListener();
+		// Send 10 packets
+		sendTestPackets(10);
+	}
+
+	private void connect()
+	{
 		RabbitConnector rabbitConnector = RabbitConnector.getInstance();
 		RabbitSettings rabbitSettings = rabbitConnector.createSettings(HOSTNAMES, PORT, USERNAME, VIRTUALHOST, PASSWORD, RECOVERY, TIMEOUT, HEARTBEAT, WORKER_TESTS);
 		RabbitService rabbitService = rabbitConnector.createService("default", rabbitSettings);
 		rabbitConnector.registerService(rabbitService);
+		setRabbitService(rabbitService);
+	}
+
+	private void createTestListener()
+	{
+		getRabbitService().addListener(new RabbitListener(getRabbitService(), "test", RabbitListenerType.SUBSCRIBER, true)
+		{
+
+			@Override
+			public void onPacketReceiving(String body)
+			{
+				Log.log(LogType.DEBUG, "Hello! (" + body + ")");
+			}
+
+		});
+	}
+
+	private void sendTestPackets(int max)
+	{
+		for (int i=0;i<max;i++)
+		{
+			getRabbitService().sendPacket(new RabbitPacket(new RabbitPacketMessage(10000, "Hi."), "test", true, RabbitPacketEncoder.UTF8, RabbitPacketType.PUBLISHER));
+		}
 	}
 
 }

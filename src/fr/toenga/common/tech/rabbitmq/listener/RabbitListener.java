@@ -6,46 +6,44 @@ import com.rabbitmq.client.Consumer;
 import fr.toenga.common.tech.rabbitmq.RabbitService;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public abstract class RabbitListener
 {
 
-	private RabbitService		rabbitService;
-	private String				name;
-	private RabbitListenerType	type;
-	private boolean				debug;
-	@Setter private Consumer	consumer;
-	
+	private final RabbitService			rabbitService;
+	private final String				name;
+	private final RabbitListenerType	type;
+	private final boolean				debug;
+	@Setter private Consumer			consumer;
+
 	public void load()
 	{
 		try {
-			while (getRabbitService().isAlive()) {
-				if (getConsumer() == null) {
-					Channel channel = getRabbitService().getChannel();
-					switch (getType()) {
-					case MESSAGE_BROKER:
-						channel.queueDeclare(getName(), false, false, false, null);
-						break;
-					case SUBSCRIBER:
-						channel.exchangeDeclare(getName(), "fanout");
-						String tempQueueName = channel.queueDeclare().getQueue();
-						channel.queueBind(tempQueueName, getName(), "");
-						break;
-					default:
-						Log.log(LogType.ERROR, "Unknown listener type.");
-					}
-					setConsumer(new RabbitListenerConsumer(channel, this));
-					channel.basicConsume(getName(), true, getConsumer());
-					System.out.println("[RabbitConnector] Loaded listener from " + getName() + " (" + getClass().getSimpleName() + ").");
-				}
+			if (!getRabbitService().isAlive()) return;
+			Channel channel = getRabbitService().getChannel();
+			String finalQueueName = getName();
+			switch (getType()) {
+			case MESSAGE_BROKER:
+				channel.queueDeclare(getName(), false, false, false, null);
+				break;
+			case SUBSCRIBER:
+				channel.exchangeDeclare(getName(), "fanout");
+				finalQueueName = channel.queueDeclare().getQueue();
+				channel.queueBind(finalQueueName, getName(), "");
+				break;
+			default:
+				Log.log(LogType.ERROR, "Unknown listener type.");
 			}
+			setConsumer(new RabbitListenerConsumer(channel, this));
+			channel.basicConsume(finalQueueName, true, getConsumer());
+			Log.log(LogType.SUCCESS, "[RabbitConnector] Loaded listener from " + getName() + " (" + getClass().getSimpleName() + ").");
 		}catch(Exception error) {
-			System.out.println("[RabbitConnector] Error during a listener bind.");
+			Log.log(LogType.ERROR, "[RabbitConnector] Error during a listener bind.");
 			error.printStackTrace();
 		}
 	}

@@ -22,6 +22,7 @@ public class RabbitThread extends Thread
 	public RabbitThread(RabbitPacketManager packetManager, int id)
 	{
 		super("ToengaCommon/RabbitThread/" + id);
+		setPacketManager(packetManager);
 		this.start();
 	}
 
@@ -41,6 +42,14 @@ public class RabbitThread extends Thread
 					{
 						Channel channel = rabbitService.getChannel();
 						RabbitPacket rabbitPacket = queue.poll();
+						if (rabbitPacket == null) 
+						{
+							continue;
+						}
+						if (rabbitPacket.getRabbitMessage() == null)
+						{
+							continue;
+						}
 						String message = rabbitPacket.getRabbitMessage().toJson();
 						switch (rabbitPacket.getType())
 						{
@@ -61,6 +70,15 @@ public class RabbitThread extends Thread
 						Log.log(LogType.ERROR, "[RabbitConnector] An error occurred while trying to send packet.");
 						error.printStackTrace();
 					}
+				}
+				try
+				{
+					this.wait();
+				}
+				catch (InterruptedException e) 
+				{
+					Log.log(LogType.ERROR, "[RabbitConnector] An error occurred while trying to handle a thread.");
+					e.printStackTrace();
 				}
 			}
 		}
