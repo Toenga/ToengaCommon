@@ -45,17 +45,17 @@ public class RabbitService extends AutoReconnector
 		listeners.add(listener);
 		return this;
 	}
-	
+
 	public void sendPacket(RabbitPacket rabbitPacket)
 	{
 		getPacketManager().sendPacket(rabbitPacket);
 	}
-	
+
 	public void remove()
 	{
 		setDead(true);
 	}
-	
+
 	public boolean isAlive()
 	{
 		return !isDead();
@@ -71,7 +71,10 @@ public class RabbitService extends AutoReconnector
 	@Override
 	public void reconnect() 
 	{
-		if (isConnected()) return;
+		if (isConnected()) 
+		{
+			return;
+		}
 		try 
 		{
 			long time = System.currentTimeMillis();
@@ -92,7 +95,7 @@ public class RabbitService extends AutoReconnector
 			Log.log(LogType.ERROR, "Unable to connect to RabbitMQ service. (" + error.getMessage() + ").");
 		}
 	}
-	
+
 	public RabbitPacketManager getPacketManager()
 	{
 		return RabbitPacketManager.getInstance(this);
