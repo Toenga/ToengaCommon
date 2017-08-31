@@ -8,7 +8,7 @@ public class RabbitPacket {
 	private RabbitMessage		rabbitMessage;
 	private String		 		queue;
 	private boolean 			debug;
-	private RabbitEncode		encoder;
+	private RabbitEncoder		encoder;
 	private RabbitPacketType	type;
 	
 }
