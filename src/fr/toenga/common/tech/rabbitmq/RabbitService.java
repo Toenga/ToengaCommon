@@ -53,7 +53,27 @@ public class RabbitService extends AutoReconnector
 
 	public void remove()
 	{
-		setDead(true);
+		long time = System.currentTimeMillis();
+		setDead(true); // Set dead
+		cancel(); // Cancel AutoReconnector task
+		// Close channel
+		try {
+			getChannel().close();
+		} catch (Exception error) {
+			Log.log(LogType.ERROR, "[RabbitConnector] Something gone wrong while trying to close RabbitMQ channel.");
+			Log.log(LogType.ERROR, "[RabbitConnector] Otherwhise, we are trying to close connection..");
+			error.printStackTrace();
+		}
+		// Close connection
+		try {
+			getConnection().close();
+		} catch (Exception error) {
+			Log.log(LogType.ERROR, "[RabbitConnector] Something gone wrong while trying to close RabbitMQ connection.");
+			error.printStackTrace();
+			return;
+		}
+		RabbitConnector.getInstance().getServices().remove(this.getName());
+		Log.log(LogType.SUCCESS, "[RabbitConnector] RabbitMQ service disconnected (" + (System.currentTimeMillis() - time) + " ms).");
 	}
 
 	public boolean isAlive()
@@ -71,6 +91,10 @@ public class RabbitService extends AutoReconnector
 	@Override
 	public void reconnect() 
 	{
+		if (isDead())
+		{
+			return;
+		}
 		if (isConnected()) 
 		{
 			return;

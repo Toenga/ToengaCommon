@@ -58,18 +58,19 @@ import lombok.Setter;
 
 	public void remove() 
 	{
+		long time = System.currentTimeMillis();
+		setDead(true); // Set dead
+		cancel(); // Cancel AutoReconnector task
+		// Close channel
 		try {
-			long time = System.currentTimeMillis();
 			db().getMongo().close();
-			Log.log(LogType.SUCCESS, "[MongoConnector] Closed MongoDB connection (" + (System.currentTimeMillis() - time) + " ms).");
-		}
-		catch(Exception exception) 
-		{
-			Log.log(LogType.ERROR, "[MongoConnector] Something gone wrong while trying to close MongoDB connection.");
-			exception.printStackTrace();
+		} catch (Exception error) {
+			Log.log(LogType.ERROR, "[MongoConnector] Something gone wrong while trying to close Mongo.");
+			error.printStackTrace();
+			return;
 		}
 		MongoConnector.getInstance().getServices().remove(this.getName());
-		this.setDead(true);
+		Log.log(LogType.SUCCESS, "[MongoConnector] Mongo service disconnected (" + (System.currentTimeMillis() - time) + " ms).");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -90,6 +91,10 @@ import lombok.Setter;
 
 	@Override
 	public void reconnect() {
+		if (isDead())
+		{
+			return;
+		}
 		if (isConnected())
 		{
 			return;
