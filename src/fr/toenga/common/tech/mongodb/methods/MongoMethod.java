@@ -8,7 +8,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public abstract class MongoMethod {
+public abstract class MongoMethod 
+{
+	
 	private MongoService mongoService;
 	
 	public abstract void run(MongoService mongoService2);
