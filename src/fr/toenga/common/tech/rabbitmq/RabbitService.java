@@ -86,13 +86,13 @@ public class RabbitService extends AutoReconnector
 				setChannel(getConnection().createChannel());
 			// Reload listeners
 			listeners.stream().forEach(listener -> listener.load());
-			Log.log(LogType.ERROR, "Successfully reconnected to RabbitMQ service. (" + (System.currentTimeMillis() - time) + " ms).");
+			Log.log(LogType.SUCCESS, "[RabbitService] Successfully reconnected to RabbitMQ service (" + (System.currentTimeMillis() - time) + " ms).");
 		}
 		catch(Exception error) 
 		{
 			error.printStackTrace();
 			setConnectionFactory(settings.toFactory());
-			Log.log(LogType.ERROR, "Unable to connect to RabbitMQ service. (" + error.getMessage() + ").");
+			Log.log(LogType.ERROR, "[RabbitService] Unable to connect to RabbitMQ service (" + error.getMessage() + ").");
 		}
 	}
 
