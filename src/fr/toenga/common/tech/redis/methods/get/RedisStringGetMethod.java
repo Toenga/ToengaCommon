@@ -17,7 +17,8 @@ public class RedisStringGetMethod extends RedisMethod
 	private Callback<String>	callback;
 	
 	@Override
-	public void work(Jedis jedis) {
+	public void work(Jedis jedis)
+	{
 		if (getKey() == null)
 		{
 			return;

@@ -113,7 +113,8 @@ public class RedisService extends AutoReconnector
 		return redisConnector.getGson();
 	}
 
-	public boolean isAlive() {
+	public boolean isAlive()
+	{
 		return !isDead();
 	}
 

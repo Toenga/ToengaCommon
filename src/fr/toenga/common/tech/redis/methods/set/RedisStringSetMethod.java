@@ -18,7 +18,8 @@ public class RedisStringSetMethod extends RedisMethod
 	private Callback<Boolean>	callback;
 	
 	@Override
-	public void work(Jedis jedis) {
+	public void work(Jedis jedis)
+	{
 		if (getKey() == null)	
 		{
 			return;

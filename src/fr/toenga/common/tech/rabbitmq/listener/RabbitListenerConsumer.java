@@ -36,7 +36,8 @@ public class RabbitListenerConsumer extends DefaultConsumer
 		{
 			return;
 		}
-		try {
+		try
+		{
 			RabbitPacketMessage rabbitMessage = RabbitPacketMessage.fromJson(message);
 			if (rabbitMessage.isAlive()) 
 			{

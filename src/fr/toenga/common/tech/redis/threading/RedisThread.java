@@ -21,7 +21,8 @@ public class RedisThread extends TechThread<RedisMethod>
 	}
 
 	@Override
-	public void work(RedisMethod redisMethod) throws Exception {
+	public void work(RedisMethod redisMethod) throws Exception
+	{
 		redisMethod.work(getRedisService());
 	}
 

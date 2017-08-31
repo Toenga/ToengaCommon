@@ -21,7 +21,8 @@ public class MongoThread extends TechThread<MongoMethod>
 	}
 
 	@Override
-	public void work(MongoMethod mongoMethod) throws Exception {
+	public void work(MongoMethod mongoMethod) throws Exception
+	{
 		mongoMethod.run(getMongoService());
 	}
 

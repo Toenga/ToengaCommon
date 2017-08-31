@@ -17,7 +17,8 @@ public class RedisDeleteKeysMethod extends RedisMethod
 	private String[]			keys;
 	
 	@Override
-	public void work(Jedis jedis) {
+	public void work(Jedis jedis)
+	{
 		if (getKeys() == null)
 		{
 			return;

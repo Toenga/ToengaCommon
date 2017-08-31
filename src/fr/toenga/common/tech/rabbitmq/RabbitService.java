@@ -62,17 +62,23 @@ public class RabbitService extends AutoReconnector
 		setDead(true); // Set dead
 		cancel(); // Cancel AutoReconnector task
 		// Close channel
-		try {
+		try
+		{
 			getChannel().close();
-		} catch (Exception error) {
+		}
+		catch (Exception error)
+		{
 			Log.log(LogType.ERROR, "[RabbitConnector] Something gone wrong while trying to close RabbitMQ channel.");
 			Log.log(LogType.ERROR, "[RabbitConnector] Otherwhise, we are trying to close connection..");
 			error.printStackTrace();
 		}
 		// Close connection
-		try {
+		try
+		{
 			getConnection().close();
-		} catch (Exception error) {
+		}
+		catch (Exception error)
+		{
 			Log.log(LogType.ERROR, "[RabbitConnector] Something gone wrong while trying to close RabbitMQ connection.");
 			error.printStackTrace();
 			return;

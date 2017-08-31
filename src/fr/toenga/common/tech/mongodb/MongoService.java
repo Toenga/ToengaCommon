@@ -116,9 +116,12 @@ import lombok.Setter;
 		setDead(true); // Set dead
 		cancel(); // Cancel AutoReconnector task
 		// Close channel
-		try {
+		try
+		{
 			db().getMongo().close();
-		} catch (Exception error) {
+		}
+		catch (Exception error)
+		{
 			Log.log(LogType.ERROR, "[MongoConnector] Something gone wrong while trying to close Mongo.");
 			error.printStackTrace();
 			return;
@@ -144,7 +147,8 @@ import lombok.Setter;
 	}
 
 	@Override
-	public void reconnect() {
+	public void reconnect()
+	{
 		if (isDead())
 		{
 			return;

@@ -5,7 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum RabbitPacketEncoder {
+public enum RabbitPacketEncoder
+{
 
 	UTF8("UTF-8");
 	

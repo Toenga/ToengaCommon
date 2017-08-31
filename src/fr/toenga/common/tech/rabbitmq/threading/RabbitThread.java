@@ -26,7 +26,8 @@ public class RabbitThread extends TechThread<RabbitPacket>
 	}
 
 	@Override
-	public void work(RabbitPacket rabbitPacket) throws Exception {
+	public void work(RabbitPacket rabbitPacket) throws Exception
+	{
 		RabbitService rabbitService = getPacketManager().getRabbitService();
 		Channel channel = rabbitService.getChannel();
 		if (rabbitPacket.getRabbitMessage() == null)

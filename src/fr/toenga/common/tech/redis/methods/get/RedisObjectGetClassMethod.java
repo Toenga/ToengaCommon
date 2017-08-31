@@ -21,7 +21,8 @@ public class RedisObjectGetClassMethod<T> extends RedisMethod
 	private Callback<T>			callback;
 	
 	@Override
-	public void work(Jedis jedis) {
+	public void work(Jedis jedis)
+	{
 		if (getKey() == null)
 		{
 			return;

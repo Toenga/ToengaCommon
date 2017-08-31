@@ -116,15 +116,20 @@ public enum ChatColor
 	private final static Map<Integer, ChatColor> BY_ID = Maps.newHashMap();
 	private final static Map<Character, ChatColor> BY_CHAR = Maps.newHashMap();
 
-	private ChatColor(char code, int intCode) {
+	private ChatColor(char code, int intCode)
+	{
 		this(code, intCode, false);
 	}
 
-	private ChatColor(char code, int intCode, boolean isFormat) {
+	private ChatColor(char code, int intCode, boolean isFormat)
+	{
 		this.code = code;
 		this.intCode = intCode;
 		this.isFormat = isFormat;
-		this.toString = new String(new char[] {COLOR_CHAR, code});
+		this.toString = new String(new char[] 
+				{
+						COLOR_CHAR, code
+				});
 	}
 
 	/**
@@ -132,26 +137,30 @@ public enum ChatColor
 	 *
 	 * @return A char value of this color code
 	 */
-	public char getChar() {
+	public char getChar()
+	{
 		return code;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return toString;
 	}
 
 	/**
 	 * Checks if this code is a format code as opposed to a color code.
 	 */
-	public boolean isFormat() {
+	public boolean isFormat()
+	{
 		return isFormat;
 	}
 
 	/**
 	 * Checks if this code is a color code as opposed to a format code.
 	 */
-	public boolean isColor() {
+	public boolean isColor()
+	{
 		return !isFormat && this != RESET;
 	}
 
@@ -159,10 +168,14 @@ public enum ChatColor
 	 * Gets the color represented by the specified color code
 	 *
 	 * @param code Code to check
-	 * @return Associative {@link org.bukkit.ChatColor} with the given code,
+	 * @return Associative 
+	 * {
+	 * @link org.bukkit.ChatColo
+	 * } with the given code,
 	 *     or null if it doesn't exist
 	 */
-	public static ChatColor getByChar(char code) {
+	public static ChatColor getByChar(char code)
+	{
 		return BY_CHAR.get(code);
 	}
 
@@ -170,10 +183,14 @@ public enum ChatColor
 	 * Gets the color represented by the specified color code
 	 *
 	 * @param code Code to check
-	 * @return Associative {@link org.bukkit.ChatColor} with the given code,
+	 * @return Associative
+	 * {
+	 * @link org.bukkit.ChatColor
+	 * } with the given code,
 	 *     or null if it doesn't exist
 	 */
-	public static ChatColor getByChar(String code) {
+	public static ChatColor getByChar(String code)
+	{
 		Validate.notNull(code, "Code cannot be null");
 		Validate.isTrue(code.length() > 0, "Code must have at least one char");
 
@@ -186,8 +203,10 @@ public enum ChatColor
 	 * @param input String to strip of color
 	 * @return A copy of the input string, without any coloring
 	 */
-	public static String stripColor(final String input) {
-		if (input == null) {
+	public static String stripColor(final String input)
+	{
+		if (input == null)
+		{
 			return null;
 		}
 
@@ -204,10 +223,13 @@ public enum ChatColor
 	 * @param textToTranslate Text containing the alternate color code character.
 	 * @return Text containing the ChatColor.COLOR_CODE color code character.
 	 */
-	public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
+	public static String translateAlternateColorCodes(char altColorChar, String textToTranslate)
+	{
 		char[] b = textToTranslate.toCharArray();
-		for (int i = 0; i < b.length - 1; i++) {
-			if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i+1]) > -1) {
+		for (int i = 0; i < b.length - 1; i++)
+		{
+			if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i+1]) > -1)
+			{
 				b[i] = ChatColor.COLOR_CHAR;
 				b[i+1] = Character.toLowerCase(b[i+1]);
 			}
@@ -221,22 +243,27 @@ public enum ChatColor
 	 * @param input Input string to retrieve the colors from.
 	 * @return Any remaining ChatColors to pass onto the next line.
 	 */
-	public static String getLastColors(String input) {
+	public static String getLastColors(String input)
+	{
 		String result = "";
 		int length = input.length();
 
 		// Search backwards from the end as it is faster
-		for (int index = length - 1; index > -1; index--) {
+		for (int index = length - 1; index > -1; index--)
+		{
 			char section = input.charAt(index);
-			if (section == COLOR_CHAR && index < length - 1) {
+			if (section == COLOR_CHAR && index < length - 1)
+			{
 				char c = input.charAt(index + 1);
 				ChatColor color = getByChar(c);
 
-				if (color != null) {
+				if (color != null)
+				{
 					result = color.toString() + result;
 
 					// Once we find a color or reset we can stop searching
-					if (color.isColor() || color.equals(RESET)) {
+					if (color.isColor() || color.equals(RESET))
+					{
 						break;
 					}
 				}
@@ -246,8 +273,10 @@ public enum ChatColor
 		return result;
 	}
 
-	static {
-		for (ChatColor color : values()) {
+	static
+	{
+		for (ChatColor color : values())
+		{
 			BY_ID.put(color.intCode, color);
 			BY_CHAR.put(color.code, color);
 		}
