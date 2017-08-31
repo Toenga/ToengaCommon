@@ -58,13 +58,15 @@ import lombok.Setter;
 
 	public void remove() 
 	{
-		System.out.println("[MongoConnector] Unregistered service! (" + this.getName() + ")");
 		try {
+			long time = System.currentTimeMillis();
 			db().getMongo().close();
+			Log.log(LogType.SUCCESS, "[MongoService] Closed MongoDB connection (" + (System.currentTimeMillis() - time) + " ms).");
 		}
 		catch(Exception exception) 
 		{
-			System.out.println("[MongoConnector] Error during the disconnection: " + exception.getMessage() + ")");
+			Log.log(LogType.ERROR, "[MongoService] Something gone wrong while trying to close MongoDB connection.");
+			exception.printStackTrace();
 		}
 		MongoConnector.getInstance().getServices().remove(this.getName());
 		this.setDead(true);
@@ -96,12 +98,12 @@ import lombok.Setter;
 		{
 			long time = System.currentTimeMillis();
 			this.loadMongo();
-			Log.log(LogType.ERROR, "Successfully (re)connected to MongoDB service. (" + (System.currentTimeMillis() - time) + " ms).");
+			Log.log(LogType.SUCCESS, "[MongoService] Successfully (re)connected to MongoDB service (" + (System.currentTimeMillis() - time) + " ms).");
 		}
 		catch(Exception error) 
 		{
 			error.printStackTrace();
-			Log.log(LogType.ERROR, "Unable to connect to MongoDB service. (" + error.getMessage() + ").");
+			Log.log(LogType.ERROR, "[MongoService] Unable to connect to MongoDB service (" + error.getMessage() + ").");
 		}
 	}
 
