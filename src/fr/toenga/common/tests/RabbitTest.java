@@ -4,7 +4,7 @@ import fr.toenga.common.tech.rabbitmq.RabbitConnector;
 import fr.toenga.common.tech.rabbitmq.RabbitService;
 import fr.toenga.common.tech.rabbitmq.RabbitSettings;
 
-public class RabbitTest 
+public class RabbitTest
 {
 
 	private static String[] HOSTNAMES	= new String[] 
@@ -22,7 +22,7 @@ public class RabbitTest
 	public static void main(String[] args) 
 	{
 		RabbitConnector rabbitConnector = RabbitConnector.getInstance();
-		RabbitSettings rabbitSettings = new RabbitSettings(HOSTNAMES, PORT, USERNAME, VIRTUALHOST, PASSWORD, RECOVERY, TIMEOUT, HEARTBEAT);
+		RabbitSettings rabbitSettings = rabbitConnector.createSettings(HOSTNAMES, PORT, USERNAME, VIRTUALHOST, PASSWORD, RECOVERY, TIMEOUT, HEARTBEAT);
 		RabbitService rabbitService = rabbitConnector.createService("default", rabbitSettings);
 		rabbitConnector.registerService(rabbitService);
 	}

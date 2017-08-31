@@ -42,6 +42,11 @@ public class RabbitService extends AutoReconnector
 		return this;
 	}
 	
+	public void sendPacket(RabbitPacket rabbitPacket)
+	{
+		RabbitPacketManager.getInstance().sendPacket(rabbitPacket);
+	}
+	
 	public void remove()
 	{
 		setDead(true);
@@ -73,7 +78,8 @@ public class RabbitService extends AutoReconnector
 			if (getChannel() == null || !getChannel().isOpen())
 				setChannel(getConnection().createChannel());
 			Log.log(LogType.ERROR, "Successfully reconnected to RabbitMQ service. (" + (System.currentTimeMillis() - time) + " ms).");
-		}catch(Exception error) 
+		}
+		catch(Exception error) 
 		{
 			error.printStackTrace();
 			setConnectionFactory(settings.getFactory());
