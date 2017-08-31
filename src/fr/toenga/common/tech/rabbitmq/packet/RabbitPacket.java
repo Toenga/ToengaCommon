@@ -5,7 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class RabbitPacket {
+public class RabbitPacket
+{
 
 	private RabbitPacketMessage		rabbitMessage;
 	private String					queue;

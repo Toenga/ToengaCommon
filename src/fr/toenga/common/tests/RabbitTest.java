@@ -69,13 +69,11 @@ public class RabbitTest
 	{
 		getRabbitService().addListener(new RabbitListener(getRabbitService(), "test", RabbitListenerType.SUBSCRIBER, true)
 		{
-
 			@Override
 			public void onPacketReceiving(String body)
 			{
 				Log.log(LogType.DEBUG, "Hello! (" + body + ")");
 			}
-
 		});
 	}
 

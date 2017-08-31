@@ -44,7 +44,10 @@ public class RabbitPacketManager
 	private void dislogeQueue()
 	{
 		Optional<RabbitThread> availableThread = getAvailableThread();
-		if (isUnreachable(availableThread)) return;
+		if (isUnreachable(availableThread))
+		{
+			return;
+		}
 		RabbitThread thread = availableThread.get();
 		thread.stirHimself();
 	}

@@ -9,7 +9,10 @@ import com.google.common.collect.Maps;
 /**
  * All supported color values for chat
  */
-public enum ChatColor {
+
+// TODO: replace that
+public enum ChatColor 
+{
 	/**
 	 * Represents black
 	 */
