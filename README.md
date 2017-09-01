@@ -20,15 +20,23 @@ ToengaCommon is a library used for Toenga and Toenga plugins.
   - Setting serializer
   - Make your own methods
   - Better async usage
+- SQL overlay (not tested)
+  - Overlay of HikariCP
+  - AutoReconnect
+  - Setting serializer
+  - Make your own methods
+  - Query/Update methods
+  - SQL async methods
+  - Better async usage
 - Utils
 
 ## Upcoming features
 
-- SQL overlay (HikariCP? looking before for the best SQL connection pool)
 - Test of MongoDB overlay
-- Test of redis overlay
-- More tools
+- Test of Redis overlay
+- Test of SQL overlay
 - Maven support
+- More tools
 
 ## Contributing
 
