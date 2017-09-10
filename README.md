@@ -11,6 +11,7 @@ ToengaCommon is a library used for Toenga and Toenga plugins.
   - Listeners
   - Message broker methods
   - Publish/Subscribe methods
+  - Packets with TTL restriction (synchronized by NTP server)
 - MongoDB overlay (not tested)
   - AutoReconnect
   - Setting serializer
@@ -45,4 +46,3 @@ You can contribute by sending issues and pull requests.
 ## License
 
 ToengaCommon is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
-
