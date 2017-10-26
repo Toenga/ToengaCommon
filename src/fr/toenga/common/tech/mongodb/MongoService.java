@@ -97,10 +97,6 @@ import lombok.Setter;
 			Log.log(LogType.ERROR, "[MongoConnector] The service is already dead.");
 			return;
 		}
-		if (isConnected())
-		{
-			return;
-		}
 		long time = System.currentTimeMillis();
 		setDead(true); // Set dead
 		getTask().cancel(); // Cancel AutoReconnector task
@@ -119,18 +115,18 @@ import lombok.Setter;
 		Log.log(LogType.SUCCESS, "[MongoConnector] Mongo service disconnected (" + (System.currentTimeMillis() - time) + " ms).");
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean isConnected() 
 	{
 		// Disgusting method, TODO find something better
 		try 
 		{
-			db().getMongo().getDatabaseNames();
+			db().getCollectionNames();
 			return true;
 		} 
 		catch (Exception exception)
 		{
+			exception.printStackTrace();
 			return false;
 		}
 	}
