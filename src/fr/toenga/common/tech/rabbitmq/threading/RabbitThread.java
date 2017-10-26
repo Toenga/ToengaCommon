@@ -22,7 +22,6 @@ public class RabbitThread extends TechThread<RabbitPacket>
 	{
 		super("RabbitThread", packetManager.getQueue(), id);
 		setPacketManager(packetManager);
-		this.start();
 	}
 
 	@Override

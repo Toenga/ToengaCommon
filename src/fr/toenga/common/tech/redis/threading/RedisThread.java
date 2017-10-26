@@ -17,7 +17,6 @@ public class RedisThread extends TechThread<RedisMethod>
 	{
 		super("RedisThread", redisService.getQueue(), id);
 		setRedisService(redisService);
-		this.start();
 	}
 
 	@Override

@@ -17,7 +17,6 @@ public class SQLPacketThread extends TechThread<SQLPacket>
 	{
 		super("SQLPacketThread", sqlService.getPacketQueue(), id);
 		setSqlService(sqlService);
-		this.start();
 	}
 
 	@Override

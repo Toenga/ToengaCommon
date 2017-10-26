@@ -17,7 +17,6 @@ public class SQLMethodThread extends TechThread<SQLMethod>
 	{
 		super("SQLMethodThread", sqlService.getMethodQueue(), id);
 		setSqlService(sqlService);
-		this.start();
 	}
 
 	@Override
