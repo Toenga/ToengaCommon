@@ -40,6 +40,7 @@ public abstract class TechThread<T> extends Thread
 						exception.printStackTrace();
 					}
 				}
+				laze();
 			}
 		}
 	}
