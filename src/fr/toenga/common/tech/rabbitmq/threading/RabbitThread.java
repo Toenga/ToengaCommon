@@ -29,6 +29,10 @@ public class RabbitThread extends TechThread<RabbitPacket>
 	{
 		RabbitService rabbitService = getPacketManager().getRabbitService();
 		Channel channel = rabbitService.getChannel();
+		if (rabbitPacket == null)
+		{
+			return;
+		}
 		if (rabbitPacket.getRabbitMessage() == null)
 		{
 			return;
