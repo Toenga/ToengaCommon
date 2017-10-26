@@ -112,6 +112,7 @@ public class RabbitService extends AutoReconnector
 		try 
 		{
 			long time = System.currentTimeMillis();
+			setConnectionFactory(getSettings().toFactory());
 			// Create connection
 			if (getConnection() == null || !getConnection().isOpen())
 				setConnection(getConnectionFactory().newConnection());
@@ -126,7 +127,7 @@ public class RabbitService extends AutoReconnector
 		{
 			error.printStackTrace();
 			setConnectionFactory(getSettings().toFactory());
-			log(LogType.ERROR, String.format("Unable to connect to RabbitMQ service (%s).", error.getMessage()));
+			log(LogType.ERROR, "Unable to connect to RabbitMQ service (" + error.getMessage() + ")");
 		}
 	}
 
