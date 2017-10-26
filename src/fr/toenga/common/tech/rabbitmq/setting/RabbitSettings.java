@@ -4,12 +4,13 @@ import java.util.Random;
 
 import com.rabbitmq.client.ConnectionFactory;
 
+import fr.toenga.common.tech.Settings;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class RabbitSettings 
+public class RabbitSettings extends Settings
 {
 
 	private String[]	hostnames;

@@ -1,8 +1,12 @@
 package fr.toenga.common.tech.redis.setting;
 
+import java.util.Random;
+
+import fr.toenga.common.tech.Settings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import redis.clients.jedis.Jedis;
 
 /**
  * A RedisCredentials object
@@ -11,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class RedisSettings 
+public class RedisSettings extends Settings
 {
 
 	private	String[]		hostnames;
@@ -19,5 +23,14 @@ public class RedisSettings
 	private	String			password;
 	private int				database;
 	private int				workerThreads;
+	
+	public Jedis toFactory() {
+		String[] hostnames = getHostnames();
+		int hostnameId = new Random().nextInt(hostnames.length);
+		Jedis jedis = new Jedis(hostnames[hostnameId], getPort());
+		jedis.auth(getPassword());
+		jedis.select(getDatabase());
+		return jedis;
+	}
 
 }

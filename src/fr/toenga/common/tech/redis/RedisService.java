@@ -1,11 +1,9 @@
 package fr.toenga.common.tech.redis;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 import com.google.gson.Gson;
 
@@ -34,15 +32,16 @@ public class RedisService extends AutoReconnector
 
 	public RedisService(String name, RedisSettings settings) 
 	{
-		setSettings(settings);
+		super(name, settings);
+		/*setSettings(settings);
 		setName(name);
 		setRandom(new Random());
 		setQueue(new ConcurrentLinkedDeque<>());
-		setThreads(new ArrayList<>());
+		setThreads(new ArrayList<>());*/
 		reconnect();
 		for (int i=0;i<settings.getWorkerThreads();i++)
 		{
-			getThreads().add(new RedisThread(this, i));
+			//getThreads().add(new RedisThread(this, i));
 		}
 	}
 	
@@ -87,7 +86,7 @@ public class RedisService extends AutoReconnector
 		}
 		long time = System.currentTimeMillis();
 		setDead(true); // Set dead
-		cancel(); // Cancel AutoReconnector task
+		getTask().cancel(); // Cancel AutoReconnector task
 		// Close channel
 		try 
 		{
@@ -138,11 +137,7 @@ public class RedisService extends AutoReconnector
 		try 
 		{
 			long time = System.currentTimeMillis();
-			String[] hostnames = getSettings().getHostnames();
-			int hostnameId = getRandom().nextInt(hostnames.length);
-			setJedis(new Jedis(hostnames[hostnameId], getSettings().getPort()));
-			getJedis().auth(getSettings().getPassword());
-			getJedis().select(getSettings().getDatabase());
+			setJedis(getSettings().toFactory());
 			Log.log(LogType.SUCCESS, "[RedisConnector] Successfully (re)connected to Redis service (" + (System.currentTimeMillis() - time) + " ms).");
 		}
 		catch(Exception error) 

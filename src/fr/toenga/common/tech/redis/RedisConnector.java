@@ -1,13 +1,12 @@
 package fr.toenga.common.tech.redis;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.toenga.common.tech.Connector;
 import fr.toenga.common.tech.redis.setting.RedisSettings;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +16,9 @@ import lombok.Setter;
  * services to apply some useful things, like using the key/value storage
  * @author xMalware
  */
-@Data public class RedisConnector 
+@EqualsAndHashCode(callSuper = false)
+@Data
+public class RedisConnector extends Connector<RedisService>
 {
 
 	// RedisConnector singleton instance
@@ -25,9 +26,7 @@ import lombok.Setter;
 
 	// Private fields
 	private							GsonBuilder									gsonBuilder		= new GsonBuilder();
-	private							Gson										gson			= getGsonBuilder().create();
 	private							Gson										exposeGson		= getGsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-	private 					   	ConcurrentMap<String, RedisService>			services		= new ConcurrentHashMap<>();
 	
 	/**
 	 * Create settings and be back with a RedisSettings object who is useful for some operations, like using it in different services
@@ -51,27 +50,6 @@ import lombok.Setter;
 	public RedisService createService(String name, RedisSettings redisSettings)
 	{
 		return new RedisService(name, redisSettings);
-	}
-	
-	/**
-	 * Register a new service
-	 * @param redisService		> Redis service
-	 * @return 
-	 */
-	public RedisService registerService(RedisService redisService)
-	{
-		services.put(redisService.getName(), redisService);
-		return redisService;
-	}
-	
-	/**
-	 * Unregister an existing service
-	 * @param redisService		> Redis service
-	 */
-	public RedisService unregisterService(RedisService redisService) 
-	{
-		services.remove(redisService.getName());
-		return redisService;
 	}
 	
 }

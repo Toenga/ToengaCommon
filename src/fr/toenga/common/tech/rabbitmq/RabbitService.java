@@ -21,21 +21,19 @@ import lombok.EqualsAndHashCode;
 @Data
 public class RabbitService extends AutoReconnector
 {
-
-	private String					name;
-	private RabbitSettings			settings;
+	
 	private ConnectionFactory		connectionFactory;
 	private Connection				connection;
 	private	Channel					channel;
+	private RabbitSettings			settings;
 	private boolean					dead;
 
 	private List<RabbitListener>	listeners = new ArrayList<>();
 
 	public RabbitService(String name, RabbitSettings settings)
 	{
-		setName(name);
+		super(name, settings);
 		setSettings(settings);
-		setConnectionFactory(settings.toFactory());
 		reconnect();
 	}
 
@@ -51,6 +49,7 @@ public class RabbitService extends AutoReconnector
 		getPacketManager().sendPacket(rabbitPacket);
 	}
 
+	@Override
 	public void remove()
 	{
 		if (isDead())
@@ -60,7 +59,7 @@ public class RabbitService extends AutoReconnector
 		}
 		long time = System.currentTimeMillis();
 		setDead(true); // Set dead
-		cancel(); // Cancel AutoReconnector task
+		getTask().cancel(); // Cancel AutoReconnector task
 		// Close channel
 		try
 		{
@@ -126,8 +125,8 @@ public class RabbitService extends AutoReconnector
 		catch(Exception error) 
 		{
 			error.printStackTrace();
-			setConnectionFactory(settings.toFactory());
-			Log.log(LogType.ERROR, "[RabbitConnector] Unable to connect to RabbitMQ service (" + error.getMessage() + ").");
+			setConnectionFactory(getSettings().toFactory());
+			log(LogType.ERROR, String.format("Unable to connect to RabbitMQ service (%s).", error.getMessage()));
 		}
 	}
 

@@ -3,10 +3,10 @@ package fr.toenga.common.tech.mongodb;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import com.google.gson.Gson;
-
+import fr.toenga.common.tech.Connector;
 import fr.toenga.common.tech.mongodb.setting.MongoSettings;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,14 +16,15 @@ import lombok.Setter;
  * services to apply some useful things, like using the key/value storage
  * @author xMalware
  */
-@Data public class MongoConnector 
+@EqualsAndHashCode(callSuper = false)
+@Data
+public class MongoConnector extends Connector<MongoService>
 {
 
 	// MongoConnector singleton instance
 	@Getter@Setter private static 	MongoConnector 								instance		= new MongoConnector();
 
 	// Private fields
-	private							Gson										gson			= new Gson();
 	private 					   	ConcurrentMap<String, MongoService>			services		= new ConcurrentHashMap<>();
 
 	/**

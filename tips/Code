@@ -1,0 +1,17 @@
+Some tips about code:
+
+-------------------------------------------------------------------------
+
+Get line numbers on Eclipse by Metrics plugin or search:
+
+	1. > Search > File Search
+	2. Check the Regular expression box.
+	3. Set "Containing text" box to "\n[\s]*"
+	4. Set "File name patterns" box to "*.java"
+	5. Set a working set (or create it) with projects (Toenga in this case)
+	6. Click to "Search".
+	7. You have the number of occurrences in the Search box in Eclipse.
+	
+Get line numbers on IntelliJ IDEA by Metrics.
+
+-------------------------------------------------------------------------

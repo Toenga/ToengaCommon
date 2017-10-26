@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.zaxxer.hikari.HikariConfig;
 
+import fr.toenga.common.tech.Settings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SQLSettings 
+public class SQLSettings extends Settings
 {
 
 	private	String[]		jbdcUrl;
@@ -30,7 +31,7 @@ public class SQLSettings
 	private long			connectionTimeout;
 	private int				workerThreads;
 
-	public HikariConfig toConfig()
+	public HikariConfig toFactory()
 	{
 		HikariConfig hikariConfig = new HikariConfig();
 		Random random = new Random();

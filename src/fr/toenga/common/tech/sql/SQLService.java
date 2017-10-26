@@ -44,6 +44,7 @@ public class SQLService extends AutoReconnector
 
 	public SQLService(String name, SQLSettings settings) 
 	{
+		super(name, settings);
 		setSettings(settings);
 		setName(name);
 		setRandom(new Random());
@@ -51,7 +52,7 @@ public class SQLService extends AutoReconnector
 		setMethodQueue(new ConcurrentLinkedDeque<>());
 		setPacketThreads(new ArrayList<>());
 		setMethodThreads(new ArrayList<>());
-		setHikariConfig(getSettings().toConfig());
+		setHikariConfig(getSettings().toFactory());
 		reconnect();
 		for(int i=0;i<settings.getWorkerThreads();i++)
 		{
@@ -174,7 +175,7 @@ public class SQLService extends AutoReconnector
 		}
 		long time = System.currentTimeMillis();
 		setDead(true); // Set dead
-		cancel(); // Cancel AutoReconnector task
+		getTask().cancel(); // Cancel AutoReconnector task
 		// Close channel
 		try 
 		{
@@ -233,7 +234,7 @@ public class SQLService extends AutoReconnector
 		catch(Exception error) 
 		{
 			error.printStackTrace();
-			setHikariConfig(getSettings().toConfig());
+			setHikariConfig(getSettings().toFactory());
 			Log.log(LogType.ERROR, "[SQLConnector] Unable to connect to SQL service (" + error.getMessage() + ").");
 		}
 	}

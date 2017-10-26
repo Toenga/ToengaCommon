@@ -1,10 +1,6 @@
 package fr.toenga.common.tech.rabbitmq;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.google.gson.Gson;
-
+import fr.toenga.common.tech.Connector;
 import fr.toenga.common.tech.rabbitmq.setting.RabbitSettings;
 import lombok.Getter;
 
@@ -14,17 +10,12 @@ import lombok.Getter;
  * services to apply some useful things, such as listen a queue, an exchange or build and send a queued message
  * @author xMalware
  */
-@Getter
-public class RabbitConnector 
+public class RabbitConnector extends Connector<RabbitService>
 {
 	
 	// Singleton instance of RabbitConnector
 	@Getter private static RabbitConnector	instance = new RabbitConnector();
 	
-	// Private fields
-	private Map<String, RabbitService>		services	= new ConcurrentHashMap<>();
-	private	Gson							gson		= new Gson();
-
 	/**
 	 * Create settings and be back with a RabbitSettings object which is useful for some operations, like using it for different services
 	 * @param hostnames   > hostnames, we highly recommend DNS
@@ -37,38 +28,6 @@ public class RabbitConnector
 	public RabbitSettings createSettings(String[] hostnames, int port, String username, String virtualHost, String password, boolean automaticRecovery, int connectionTimeout, int requestedHeartbeat, int workerThreads)
 	{
 		return new RabbitSettings(hostnames, port, username, virtualHost, password, automaticRecovery, connectionTimeout, requestedHeartbeat, workerThreads);
-	}
-	
-	/**
-	 * Create a new service
-	 * @param serviceName 		> name of the service
-	 * @param rabbitSettings	> credentials
-	 * @return a RabbitService object ready to work
-	 */
-	public RabbitService createService(String serviceName, RabbitSettings rabbitSettings)
-	{
-		return new RabbitService(serviceName, rabbitSettings);
-	}
-	
-	/**
-	 * Register a new service
-	 * @param rabbitService		> RabbitMQ service
-	 * @return 
-	 */
-	public RabbitService registerService(RabbitService rabbitService)
-	{
-		services.put(rabbitService.getName(), rabbitService);
-		return rabbitService;
-	}
-	
-	/**
-	 * Unregister an existing service
-	 * @param rabbitService		> RabbitMQ service
-	 */
-	public RabbitService unregisterService(RabbitService rabbitService) 
-	{
-		services.remove(rabbitService.getName());
-		return rabbitService;
 	}
 	
 }

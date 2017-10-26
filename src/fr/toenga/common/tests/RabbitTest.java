@@ -60,7 +60,7 @@ public class RabbitTest
 	{
 		RabbitConnector rabbitConnector = RabbitConnector.getInstance();
 		RabbitSettings rabbitSettings = rabbitConnector.createSettings(HOSTNAMES, PORT, USERNAME, VIRTUALHOST, PASSWORD, RECOVERY, TIMEOUT, HEARTBEAT, WORKER_TESTS);
-		RabbitService rabbitService = rabbitConnector.createService("default", rabbitSettings);
+		RabbitService rabbitService = rabbitConnector.registerService(new RabbitService("default", rabbitSettings));
 		rabbitConnector.registerService(rabbitService);
 		setRabbitService(rabbitService);
 	}

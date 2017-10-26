@@ -33,6 +33,7 @@ import lombok.Setter;
 
 	public MongoService(String name, MongoSettings settings)
 	{
+		super(name, settings);
 		this.setSettings(settings);
 		this.setName(name);
 		this.setRandom(new Random());
@@ -73,22 +74,6 @@ import lombok.Setter;
 	{
 		return threads.stream().filter(thread -> thread.canHandlePacket()).findAny();
 	}
-	
-	@SuppressWarnings("deprecation")
-	private void loadMongo()
-	{
-		try
-		{
-			String[] hostnames = getSettings().getHostnames();
-			int hostnameId = getRandom().nextInt(hostnames.length);
-			setMongoClient(new MongoClient(hostnames[hostnameId], getSettings().getPort()));
-			setDb(client().getDB(getSettings().getDatabase()));
-		} 
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
 
 	public DB db()
 	{
@@ -114,7 +99,7 @@ import lombok.Setter;
 		}
 		long time = System.currentTimeMillis();
 		setDead(true); // Set dead
-		cancel(); // Cancel AutoReconnector task
+		getTask().cancel(); // Cancel AutoReconnector task
 		// Close channel
 		try
 		{
@@ -146,6 +131,7 @@ import lombok.Setter;
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void reconnect()
 	{
@@ -160,7 +146,8 @@ import lombok.Setter;
 		try 
 		{
 			long time = System.currentTimeMillis();
-			this.loadMongo();
+			setMongoClient(getSettings().toFactory());
+			setDb(getMongoClient().getDB(settings.getDatabase()));
 			Log.log(LogType.SUCCESS, "[MongoConnector] Successfully (re)connected to MongoDB service (" + (System.currentTimeMillis() - time) + " ms).");
 		}
 		catch(Exception error) 
