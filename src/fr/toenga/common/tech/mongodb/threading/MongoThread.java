@@ -17,7 +17,6 @@ public class MongoThread extends TechThread<MongoMethod>
 	{
 		super("MongoThread", mongoService.getQueue(), id);
 		setMongoService(mongoService);
-		this.start();
 	}
 
 	@Override
