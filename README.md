@@ -37,6 +37,7 @@ ToengaCommon is a library used for Toenga and Toenga plugins.
 - Test of Redis overlay
 - Test of SQL overlay
 - Maven support
+- I18N
 - More tools
 
 ## Contributing
