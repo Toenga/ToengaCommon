@@ -17,6 +17,12 @@ public class Permissible
 	private List<String> inheritances;
 	private List<PermissionSet> permissions;
 	
+	public Permissible()
+	{
+		this.inheritances = new ArrayList<>();
+		this.permissions = new ArrayList<>();
+	}
+	
 	/**
 	 * Return the inheritances of the permissible
 	 * @return A collection of permissible
