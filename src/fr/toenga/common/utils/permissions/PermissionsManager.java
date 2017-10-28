@@ -44,7 +44,7 @@ public class PermissionsManager
 		return groups.get(name);
 	}
 	
-	public Permissible loadPermissible(String name, JsonObject value)
+	public Permissible loadPermissible(JsonObject value)
 	{
 		return I18n.getGson().fromJson(value, Permissible.class);
 	}
