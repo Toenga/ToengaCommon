@@ -119,9 +119,12 @@ import lombok.Setter;
 	public boolean isConnected() 
 	{
 		// Disgusting method, TODO find something better
+		if (db() == null)
+			return false;
 		try 
 		{
-			db().getCollectionNames();
+			// test
+			getDb().collectionExists("test");
 			return true;
 		} 
 		catch (Exception exception)

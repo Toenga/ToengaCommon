@@ -3,6 +3,7 @@ package fr.toenga.common.tech.mongodb.setting;
 import java.util.Random;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 import fr.toenga.common.tech.Settings;
 import lombok.AllArgsConstructor;
@@ -26,15 +27,17 @@ public class MongoSettings extends Settings
 	private	String					password;
 	private String					database;
 	private int						workerThreads;
-	
+
 	@Override
 	public MongoClient toFactory() {
 		try
 		{
 			String[] hostnames = getHostnames();
 			int hostnameId = new Random().nextInt(hostnames.length);
-			MongoClient mongoClient = new MongoClient(hostnames[hostnameId], getPort());
-			return mongoClient;
+			System.out.println("mongodb://" + getUsername() + ":" + getPassword() + "@" + hostnames[hostnameId] + ":" + getPort() + "/" + getDatabase());
+			MongoClient mongo = new MongoClient(
+					  new MongoClientURI("mongodb://" + getUsername() + ":" + getPassword() + "@" + hostnames[hostnameId] + ":" + getPort() + "/" + getDatabase()));
+			return mongo;
 		} 
 		catch (Exception e)
 		{
