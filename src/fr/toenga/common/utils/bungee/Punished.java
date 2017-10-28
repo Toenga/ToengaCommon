@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import org.bson.BSONObject;
 
+import fr.toenga.common.utils.i18n.I18n;
 import fr.toenga.common.utils.time.Time;
-import i18n.I18n;
 import lombok.Data;
 
 @Data public class Punished {

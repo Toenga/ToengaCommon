@@ -1,4 +1,5 @@
 package fr.toenga.common.utils.logs;
+
 import java.util.Map;
 import java.util.regex.Pattern;
 
