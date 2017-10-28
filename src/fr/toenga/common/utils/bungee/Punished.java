@@ -2,7 +2,7 @@ package fr.toenga.common.utils.bungee;
 
 import java.util.Locale;
 
-import org.bson.BSONObject;
+import com.google.gson.JsonObject;
 
 import fr.toenga.common.utils.i18n.I18n;
 import fr.toenga.common.utils.time.Time;
@@ -71,10 +71,8 @@ import lombok.Data;
 		return I18n.getMessage(locale, "punishments.youvebeenmute", muteReason, time);
 	}
 	
-	public static Punished fromJson(BSONObject object) {
-		if(object.containsField("punish"))
-			return I18n.getGson().fromJson(object.get("punish").toString(), Punished.class);
-		else return new Punished();
+	public static Punished fromJson(JsonObject punished) {
+		return I18n.getGson().fromJson(punished, Punished.class);
 	}
 	
 }
