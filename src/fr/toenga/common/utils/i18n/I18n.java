@@ -1,159 +1,155 @@
 package fr.toenga.common.utils.i18n;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.common.collect.Maps;
 
-import fr.toenga.common.utils.general.FileUtils;
+import fr.toenga.common.utils.logs.ChatColor;
 import lombok.Getter;
+import lombok.Setter;
 
 public class I18n
 {
+	
+	@Getter@Setter
+	private static I18n	instance	= new I18n();
+	
+	private final static Locale   def = Locale.FRENCH_FRANCE;
+	private Map<Locale, Language> languages;
 
-	@Getter
-	public static Gson									gson	= new GsonBuilder().setPrettyPrinting().create();
-	private static Map<Locale, Map<String, String[]>> 	strings = new HashMap<>();
-	private static Map<Locale, File>					lFolder = new HashMap<>();
-	private static Random								random	= new Random();
-
-	public static void loadI18n(File i18nFolder)
+	public I18n()
 	{
-		for (File langFolder : i18nFolder.listFiles())
+
+	}
+
+	public void load(File folder)
+	{
+		if (!folder.exists())
 		{
-			try
+			folder.mkdirs();
+		}
+
+		languages = Maps.newConcurrentMap();
+		System.out.println("[I18N] Looking for i18n languages.. (in " + folder.getAbsolutePath() + ")");
+
+		for (File languageFolder : folder.listFiles())
+		{
+			if (languageFolder.isDirectory())
 			{
-				String fileName = langFolder.getName();
-				int pos = fileName.lastIndexOf(".");
-				if (pos > 0)
-				{
-					fileName = fileName.substring(0, pos);
-				}
-				Locale locale = LocaleUtils.getLocaleByFullName(fileName);
+				Locale locale = Locale.getLocale(languageFolder.getName());
 				if (locale == null)
 				{
-					System.out.println("Unknown locale: " + fileName + ".");
-					continue;
+					System.out.println("[I18N] Invalid language folder (" + languageFolder.getName() + ") : Unknown language");
 				}
-				System.out.println(locale + " : " + langFolder.getName());
-				lFolder.put(locale, langFolder);
-				loadFolder(locale, langFolder, "");
-				System.out.println("Loaded locale: " + fileName + "!");
-			}
-			catch (Exception exception)
-			{
-				exception.printStackTrace();
-			}
-
-		}
-	}
-
-	public static void loadFolder(Locale locale, File folder, String path) throws Exception
-	{
-		for (File file : folder.listFiles())
-		{
-			if (file.isDirectory())
-			{
-				System.out.println(file.getName());
-				loadFolder(locale, file, path + file.getName() + ".");
-			}
-			if (file.getName().endsWith(".json"))
-			{
-				String fileName = file.getName();
-				int pos = fileName.lastIndexOf(".");
-				if (pos > 0) {
-					fileName = fileName.substring(0, pos);
-				}
-				System.out.println("A : " + fileName);
-				String fileContent = FileUtils.readFile(file);
-				String[] data = gson.fromJson(fileContent, String[].class);
-				String fullPath = path + fileName;
-				System.out.println("B : " + fullPath);
-				if (!strings.containsKey(locale))
+				else 
 				{
-					strings.put(locale, new HashMap<>());
+					System.out.println("[I18N] Lecture i18n ... (" + locale + ")");
+
+					languages.put(locale, new Language(locale, languageFolder));
 				}
-				System.out.println(fileName);
-				Map<String, String[]> maps = !strings.containsKey(locale) ? new HashMap<>() : strings.get(locale);
-				maps.put(fullPath, data);
-				strings.put(locale, maps);
 			}
+		}
+
+		Locale def = Locale.FRENCH_FRANCE;
+
+		if (!languages.containsKey(def))
+		{
+			languages.put(def, new Language(def, new File(folder, def.getLocaleId())));
 		}
 	}
 
-	private static String generateMessage(Locale locale, String key, Object... objects)
+	public Collection<Locale> getConfiguratedLocales()
 	{
-		String[] defaults = new String[] { key };
-		File folder = lFolder.get(locale);
-		if (folder == null)
-		{
-			System.out.println("NOT OK");
-			return key;
-		}
-		String path = folder.getAbsolutePath() + "/";
-		String[] t = key.split("\\.");
-		String fN = "";
-		if (t != null && t.length > 0)
-		{
-			String[] w = Arrays.copyOf(t, t.length - 1);
-			for (String p : w)
-			{
-				path += p + "/";
-			}
-			fN = t[t.length - 1] + ".json";
-		}
-		else
-		{
-			fN = key + ".json";
-		}
-		File pathFile = new File(path);
-		if (!pathFile.exists())
-		{
-			pathFile.mkdirs();
-		}
-		File file = new File(pathFile, fN);
-		try
-		{
-			file.createNewFile();
-		}
-		catch (IOException exception)
-		{
-			exception.printStackTrace();
-		}
-		String json = gson.toJson(defaults);
-		FileUtils.writeFile(file, json);
-		return key;
+		return Collections.unmodifiableCollection(languages.keySet());
+	}
+	
+	public Language getLanguage(Locale locale)
+	{
+		return languages.get(locale);
 	}
 
-	public static String getMessage(Locale locale, String key, Object... objects)
+	public String[] get(String key, Object... args)
 	{
-		if (!strings.containsKey(locale))
+		return get(def, key, args);
+	}
+
+	public String getWord(String key, boolean plural, WordDeterminant determinant)
+	{
+		return getWord(def, key, plural, determinant);
+	}
+
+	public String getWord(Locale locale, String key, boolean plural, WordDeterminant determinant)
+	{
+		if(locale == null)
 		{
-			generateMessage(locale, key, objects);
-			return key;
+			locale = def;
 		}
-		Map<String, String[]> maps = strings.get(locale);
-		if (!maps.containsKey(key))
+
+		Language language = languages.get(locale);
+
+		if(language == null)
 		{
-			generateMessage(locale, key, objects);
-			return key;
+			throw new RuntimeException("Trying to access to an unconfigurated language !");
 		}
-		String[] stringList = maps.get(key);
-		String message = stringList[random.nextInt(stringList.length)];
-		if (objects != null && objects.length > 0)
+
+		return language.getWord(key, plural, determinant);
+	}
+
+	public String[] get(Locale locale, String key, Object... args)
+	{
+		if (locale == null)
 		{
-			for (int i = objects.length - 1; i >= 0; i--)
-			{
-				message = message.replace("%" + i, objects[i].toString());
-			}
+			locale = def;
 		}
-		return message;
+
+		Language language = languages.get(locale);
+
+		if (language == null)
+		{
+			throw new RuntimeException("Trying to access to an unconfigurated language !");
+		}
+
+		return language.get(key, args);
+	}
+	
+	public String replaceColors(String base)
+	{
+		return ChatColor.translateAlternateColorCodes('&', base);
+	}
+
+	public String[] replaceColors(String... base)
+	{
+		for (int i=0;i<base.length;i++)
+		{
+			base[i] = replaceColors(base[i]);
+		}
+
+		return base;
+	}
+
+	public List<String> replaceColors(List<String> base)
+	{
+		List<String> result = new ArrayList<>();
+
+		for (String line : base)
+		{
+			result.add(replaceColors(line));
+		}
+
+		return result;
+	}
+
+	public void save()
+	{
+		for (Language language : languages.values())
+		{
+			language.save();
+		}
 	}
 
 }

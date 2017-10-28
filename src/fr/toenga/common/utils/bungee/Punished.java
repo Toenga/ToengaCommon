@@ -1,14 +1,16 @@
 package fr.toenga.common.utils.bungee;
 
-import java.util.Locale;
-
 import com.google.gson.JsonObject;
 
+import fr.toenga.common.utils.general.GsonUtils;
 import fr.toenga.common.utils.i18n.I18n;
+import fr.toenga.common.utils.i18n.Locale;
 import fr.toenga.common.utils.time.Time;
 import lombok.Data;
 
-@Data public class Punished {
+@Data public class Punished
+{
+	
 	private boolean ban,
 					mute;
 	
@@ -21,10 +23,11 @@ import lombok.Data;
 	private String	banner,
 					muter;
 
-	private int banId;
-	private int muteId;
+	private int		banId;
+	private int		muteId;
 	
-	public Punished(){
+	public Punished()
+	{
 		ban 	   = false;
 		mute 	   = false;
 		banEnd     = -1;
@@ -35,15 +38,18 @@ import lombok.Data;
 		muter	   = null;
 	}
 	
-	public void checkEnd(){
-		if(ban && banEnd != -1 && banEnd < System.currentTimeMillis()) {
+	public void checkEnd()
+	{
+		if (ban && banEnd != -1 && banEnd < System.currentTimeMillis())
+		{
 			ban 	  = false;
 			banEnd 	  = -1;
 			banReason = null;
 			banner 	  = null;
 		}
 		
-		if(mute && muteEnd != -1 && muteEnd < System.currentTimeMillis()){
+		if (mute && muteEnd != -1 && muteEnd < System.currentTimeMillis())
+		{
 			mute 	   = false;
 			muteEnd    = -1;
 			muteReason = null;
@@ -51,28 +57,33 @@ import lombok.Data;
 		}
 	}
 
-	public String buildBanTime(Locale locale) {
+	public String buildBanTime(Locale locale)
+	{
 		if(banEnd != -1){
 			return Time.MILLIS_SECOND.toFrench(banEnd - System.currentTimeMillis(), Time.MINUTE, Time.YEAR);
-		} else return I18n.getMessage(locale, "punishments.forever");
+		} else return I18n.getInstance().get(locale, "punishments.forever")[0];
 	}
 	
-	public String buildMuteTime(Locale locale) {
+	public String buildMuteTime(Locale locale)
+	{
 		if(muteEnd != -1){
 			return Time.MILLIS_SECOND.toFrench(muteEnd - System.currentTimeMillis(), Time.MINUTE, Time.YEAR);
-		} else return I18n.getMessage(locale, "punishments.forever");
+		} else return I18n.getInstance().get(locale, "punishments.forever")[0];
 	}
 	
-	public String buildMuteReason(Locale locale) {
+	public String[] buildMuteReason(Locale locale)
+	{
 		String time = "";
-		if(muteEnd != -1){
-			time = I18n.getMessage(locale, "punishments.for") + Time.MILLIS_SECOND.toFrench(muteEnd - System.currentTimeMillis(), Time.MINUTE, Time.YEAR);
+		if (muteEnd != -1)
+		{
+			time = I18n.getInstance().get(locale, "punishments.for")[0] + Time.MILLIS_SECOND.toFrench(muteEnd - System.currentTimeMillis(), Time.MINUTE, Time.YEAR);
 		}
-		return I18n.getMessage(locale, "punishments.youvebeenmute", muteReason, time);
+		return I18n.getInstance().get(locale, "punishments.youvebeenmute", muteReason, time);
 	}
 	
-	public static Punished fromJson(JsonObject punished) {
-		return I18n.getGson().fromJson(punished, Punished.class);
+	public static Punished fromJson(JsonObject punished)
+	{
+		return GsonUtils.getGson().fromJson(punished, Punished.class);
 	}
 	
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import fr.toenga.common.utils.i18n.I18n;
+import fr.toenga.common.utils.general.GsonUtils;
 import lombok.Getter;
 
 public class PermissionsManager
@@ -19,7 +19,9 @@ public class PermissionsManager
 	public static void createPermissionManager(JsonObject groups, String place)
 	{
 		if(manager != null)
+		{
 			new IllegalStateException("Permission manager already created!");
+		}
 		
 		manager = new PermissionsManager(groups, place);
 	}
@@ -36,7 +38,7 @@ public class PermissionsManager
 	
 	public void reloadGroups(JsonObject groups)
 	{
-		this.groups = I18n.getGson().fromJson(groups, collectionType);
+		this.groups = GsonUtils.getGson().fromJson(groups, collectionType);
 	}
 	
 	public Permissible getGroup(String name)
@@ -46,6 +48,7 @@ public class PermissionsManager
 	
 	public Permissible loadPermissible(JsonObject value)
 	{
-		return I18n.getGson().fromJson(value, Permissible.class);
+		return GsonUtils.getGson().fromJson(value, Permissible.class);
 	}
+	
 }
