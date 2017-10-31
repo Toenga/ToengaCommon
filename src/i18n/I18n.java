@@ -1,7 +1,6 @@
 package i18n;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -18,7 +17,7 @@ public class I18n
 	private static Map<String, String[]> 	strings = new HashMap<>();
 	private static Random					random	= new Random();
 
-	public static void load(File folder) throws IOException
+	public static void load(File folder) throws Exception
 	{
 		for (File file : folder.listFiles())
 		{
