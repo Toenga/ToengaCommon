@@ -28,6 +28,11 @@ public class MongoSettings extends Settings
 	private String					database;
 	private int						workerThreads;
 
+	public MongoSettings()
+	{
+		
+	}
+	
 	@Override
 	public MongoClient toFactory() {
 		try
