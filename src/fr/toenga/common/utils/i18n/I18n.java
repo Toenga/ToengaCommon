@@ -151,5 +151,10 @@ public class I18n
 			language.save();
 		}
 	}
+	
+	public static Locale getDefaultLocale()
+	{
+		return def;
+	}
 
 }
