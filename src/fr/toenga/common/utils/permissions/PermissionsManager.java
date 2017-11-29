@@ -31,7 +31,7 @@ public class PermissionsManager
 	private String currentPlace;
 	private Map<String, Permissible> groups;
 	
-	private PermissionsManager(JsonArray groups, String place)
+	public PermissionsManager(JsonArray groups, String place)
 	{
 		this.currentPlace = place;
 		reloadGroups(groups);
