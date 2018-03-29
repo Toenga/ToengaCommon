@@ -7,9 +7,9 @@ import lombok.Getter;
 @EqualsAndHashCode
 public class Permission
 {
-	private PermissionResult result;
+	private transient PermissionResult result;
+	private transient boolean isAll = false;
 	private String permission;
-	private boolean isAll = false;
 
 	public Permission(String permission)
 	{

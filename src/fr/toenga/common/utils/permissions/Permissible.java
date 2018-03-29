@@ -6,19 +6,29 @@ import java.util.List;
 
 import com.google.gson.JsonElement;
 
+import fr.toenga.common.utils.data.ExplicitObject;
 import fr.toenga.common.utils.permissions.Permission.PermissionResult;
 
 /**
  * Permissible
  * @author LeLanN
  */
-public class Permissible
+public class Permissible extends ExplicitObject
 {
+	
 	private List<String> inheritances;
 	private List<PermissionSet> permissions;
+
+	public Permissible(List<String> inheritances, List<PermissionSet> permissions)
+	{
+		super(null);
+		this.inheritances = inheritances;
+		this.permissions = permissions;
+	}
 	
 	public Permissible()
 	{
+		super(null);
 		this.inheritances = new ArrayList<>();
 		this.permissions = new ArrayList<>();
 	}

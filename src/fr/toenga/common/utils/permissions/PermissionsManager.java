@@ -1,23 +1,18 @@
 package fr.toenga.common.utils.permissions;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import fr.toenga.common.utils.general.GsonUtils;
 import lombok.Getter;
 
 public class PermissionsManager
 {
-	private static final Type collectionType = new TypeToken<Map<String, Permissible>>(){}.getType();
-
 	@Getter
 	private static PermissionsManager manager;
 	
-	public static void createPermissionManager(JsonArray groups, String place)
+	public static void createPermissionManager(Map<String, Permissible> groups, String place)
 	{
 		if(manager != null)
 		{
@@ -31,15 +26,15 @@ public class PermissionsManager
 	private String currentPlace;
 	private Map<String, Permissible> groups;
 	
-	public PermissionsManager(JsonArray groups, String place)
+	public PermissionsManager(Map<String, Permissible> groups, String place)
 	{
 		this.currentPlace = place;
 		reloadGroups(groups);
 	}
 	
-	public void reloadGroups(JsonArray groups)
+	public void reloadGroups(Map<String, Permissible> groups)
 	{
-		this.groups = GsonUtils.getGson().fromJson(groups, collectionType);
+		this.groups = groups;
 	}
 	
 	public Permissible getGroup(String name)

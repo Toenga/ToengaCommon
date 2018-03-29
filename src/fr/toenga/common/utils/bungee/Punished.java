@@ -2,13 +2,17 @@ package fr.toenga.common.utils.bungee;
 
 import com.google.gson.JsonObject;
 
+import fr.toenga.common.utils.data.ExplicitObject;
 import fr.toenga.common.utils.general.GsonUtils;
 import fr.toenga.common.utils.i18n.I18n;
 import fr.toenga.common.utils.i18n.Locale;
 import fr.toenga.common.utils.time.Time;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Data public class Punished
+@EqualsAndHashCode(callSuper = false)
+@Data
+public class Punished extends ExplicitObject
 {
 	
 	private boolean ban,
@@ -28,6 +32,7 @@ import lombok.Data;
 	
 	public Punished()
 	{
+		super(null);
 		ban 	   = false;
 		mute 	   = false;
 		banEnd     = -1;

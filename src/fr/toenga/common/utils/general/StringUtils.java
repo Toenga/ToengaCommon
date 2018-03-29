@@ -1,6 +1,8 @@
 package fr.toenga.common.utils.general;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,22 +15,34 @@ public class StringUtils {
 	public static <T> String join(Stream<T> toJoin, String... joiners) {
 		return join(toJoin.collect(Collectors.toSet()), joiners);
 	}
-	
+
+	public static String toOneString(String[] strings)
+	{
+		StringBuilder stringBuilder = new StringBuilder();
+		Iterator<String> iterator = Arrays.asList(strings).iterator();
+		while (iterator.hasNext())
+		{
+			String string = iterator.next();
+			stringBuilder.append(string + (iterator.hasNext() ? System.lineSeparator() : ""));
+		}
+		return stringBuilder.toString();
+	}
+
 	public static <T> String join(Collection<T> toJoin, String... joiners) {
 		if(joiners.length == 0)
 			throw new IllegalArgumentException("No joiners provided");
-		
+
 		boolean first  = true;
 		int     joiner = 0;
 		String  result = "";
-		
+
 		for (T o : toJoin) {
 			if (o == null)
 				continue;
 			if (!first){
 				result += joiners[joiner];
 				joiner++;
-				
+
 				if(joiner >= joiners.length)
 					joiner = 0;
 			}
