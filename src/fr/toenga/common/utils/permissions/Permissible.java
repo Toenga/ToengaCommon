@@ -1,36 +1,58 @@
 package fr.toenga.common.utils.permissions;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
-import fr.toenga.common.utils.data.ExplicitObject;
+import fr.toenga.common.utils.general.GsonUtils;
 import fr.toenga.common.utils.permissions.Permission.PermissionResult;
 
 /**
  * Permissible
  * @author LeLanN
  */
-public class Permissible extends ExplicitObject
+public class Permissible
 {
-	
+
+	@SuppressWarnings("serial")
+	Type inheritanceList = new TypeToken<List<String>>() {}.getType();
+	@SuppressWarnings("serial")
+	Type permissionList = new TypeToken<List<PermissionSet>>() {}.getType();
+
 	private List<String> inheritances;
 	private List<PermissionSet> permissions;
 
 	public Permissible(List<String> inheritances, List<PermissionSet> permissions)
 	{
-		super(null);
 		this.inheritances = inheritances;
 		this.permissions = permissions;
 	}
 	
 	public Permissible()
 	{
-		super(null);
 		this.inheritances = new ArrayList<>();
 		this.permissions = new ArrayList<>();
+	}
+	
+	public Permissible(JsonObject jsonObject)
+	{
+		inheritances = GsonUtils.getPrettyGson().fromJson(jsonObject.get("inheritances"), inheritanceList);
+		permissions = GsonUtils.getPrettyGson().fromJson(jsonObject.get("permissions"), permissionList);
+	}
+	
+	public DBObject getDBObject()
+	{
+		BasicDBObject query = new BasicDBObject();
+		query.put("inheritances", inheritances);
+		query.put("permissions", permissions);
+		return query;
 	}
 	
 	/**
