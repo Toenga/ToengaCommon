@@ -17,7 +17,6 @@ public class RedisObjectGetClassMethod<T> extends RedisMethod
 	private RedisService		redisService;
 	private String				key;
 	private Class<T>			clazz;
-	private boolean				indented;
 	private Callback<T>			callback;
 	
 	@Override
@@ -31,7 +30,7 @@ public class RedisObjectGetClassMethod<T> extends RedisMethod
 		{
 			return;
 		}
-		getCallback().done(getRedisService().getGson(isIndented()).fromJson(jedis.get(getKey()), getClazz()), null);
+		getCallback().done(getRedisService().getGson(false).fromJson(jedis.get(getKey()), getClazz()), null);
 	}
 
 }
