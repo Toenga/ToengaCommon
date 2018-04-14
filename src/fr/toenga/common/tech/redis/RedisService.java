@@ -1,9 +1,11 @@
 package fr.toenga.common.tech.redis;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import com.google.gson.Gson;
 
@@ -33,15 +35,15 @@ public class RedisService extends AutoReconnector
 	public RedisService(String name, RedisSettings settings) 
 	{
 		super(name, settings);
-		/*setSettings(settings);
+		setSettings(settings);
 		setName(name);
 		setRandom(new Random());
 		setQueue(new ConcurrentLinkedDeque<>());
-		setThreads(new ArrayList<>());*/
+		setThreads(new ArrayList<>());
 		reconnect();
 		for (int i=0;i<settings.getWorkerThreads();i++)
 		{
-			//getThreads().add(new RedisThread(this, i));
+			getThreads().add(new RedisThread(this, i));
 		}
 	}
 	

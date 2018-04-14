@@ -24,7 +24,8 @@ public class RedisSettings extends Settings
 	private int				database;
 	private int				workerThreads;
 	
-	public Jedis toFactory() {
+	public Jedis toFactory()
+	{
 		String[] hostnames = getHostnames();
 		int hostnameId = new Random().nextInt(hostnames.length);
 		Jedis jedis = new Jedis(hostnames[hostnameId], getPort());

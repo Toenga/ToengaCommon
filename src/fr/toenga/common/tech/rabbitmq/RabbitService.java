@@ -127,7 +127,7 @@ public class RabbitService extends AutoReconnector
 		{
 			error.printStackTrace();
 			setConnectionFactory(getSettings().toFactory());
-			log(LogType.ERROR, "Unable to connect to RabbitMQ service (" + error.getMessage() + ")");
+			Log.log(LogType.ERROR, "Unable to connect to RabbitMQ service (" + error.getMessage() + ")");
 		}
 	}
 
