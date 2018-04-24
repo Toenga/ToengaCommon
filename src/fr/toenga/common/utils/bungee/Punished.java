@@ -14,22 +14,22 @@ import lombok.EqualsAndHashCode;
 @Data
 public class Punished
 {
-	
+
 	private boolean ban,
-					mute;
-	
+	mute;
+
 	private long	banEnd,
-					muteEnd;
-	
+	muteEnd;
+
 	private String	banReason,
-					muteReason;
-	
+	muteReason;
+
 	private String	banner,
-					muter;
+	muter;
 
 	private int		banId;
 	private int		muteId;
-	
+
 	public Punished()
 	{
 		ban 	   = false;
@@ -41,21 +41,51 @@ public class Punished
 		banner     = null;
 		muter	   = null;
 	}
-	
+
 	public Punished(JsonObject jsonObject)
 	{
-		ban = jsonObject.get("ban").getAsBoolean();
-		mute = jsonObject.get("mute").getAsBoolean();
-		banEnd = jsonObject.get("banEnd").getAsLong();
-		muteEnd = jsonObject.get("muteEnd").getAsLong();
-		banReason = jsonObject.get("banReason").getAsString();
-		muteReason = jsonObject.get("muteReason").getAsString();
-		banner = jsonObject.get("banner").getAsString();
-		muter = jsonObject.get("muter").getAsString();
-		banId = jsonObject.get("banId").getAsInt();
-		muteId = jsonObject.get("muteId").getAsInt();
+		if (jsonObject.has("ban"))
+		{
+			ban = jsonObject.get("ban").getAsBoolean();
+		}
+		if (jsonObject.has("mute"))
+		{
+			mute = jsonObject.get("mute").getAsBoolean();
+		}
+		if (jsonObject.has("banEnd"))
+		{
+			banEnd = jsonObject.get("banEnd").getAsLong();
+		}
+		if (jsonObject.has("muteEnd"))
+		{
+			muteEnd = jsonObject.get("muteEnd").getAsLong();
+		}
+		if (jsonObject.has("banReason"))
+		{
+			banReason = jsonObject.get("banReason").getAsString();
+		}
+		if (jsonObject.has("muteReason"))
+		{
+			muteReason = jsonObject.get("muteReason").getAsString();
+		}
+		if (jsonObject.has("banner"))
+		{
+			banner = jsonObject.get("banner").getAsString();
+		}
+		if (jsonObject.has("muter"))
+		{
+			muter = jsonObject.get("muter").getAsString();
+		}
+		if (jsonObject.has("banId"))
+		{
+			banId = jsonObject.get("banId").getAsInt();
+		}
+		if (jsonObject.has("muteId"))
+		{
+			muteId = jsonObject.get("muteId").getAsInt();
+		}
 	}
-	
+
 	public DBObject getDBObject()
 	{
 		BasicDBObject query = new BasicDBObject();
@@ -81,7 +111,7 @@ public class Punished
 			banReason = null;
 			banner 	  = null;
 		}
-		
+
 		if (mute && muteEnd != -1 && muteEnd < System.currentTimeMillis())
 		{
 			mute 	   = false;
@@ -97,14 +127,14 @@ public class Punished
 			return Time.MILLIS_SECOND.toFrench(banEnd - System.currentTimeMillis(), Time.MINUTE, Time.YEAR);
 		} else return I18n.getInstance().get(locale, "punishments.forever")[0];
 	}
-	
+
 	public String buildMuteTime(Locale locale)
 	{
 		if(muteEnd != -1){
 			return Time.MILLIS_SECOND.toFrench(muteEnd - System.currentTimeMillis(), Time.MINUTE, Time.YEAR);
 		} else return I18n.getInstance().get(locale, "punishments.forever")[0];
 	}
-	
+
 	public String[] buildMuteReason(Locale locale)
 	{
 		String time = "";
@@ -114,5 +144,5 @@ public class Punished
 		}
 		return I18n.getInstance().get(locale, "punishments.youvebeenmute", muteReason, time);
 	}
-	
+
 }

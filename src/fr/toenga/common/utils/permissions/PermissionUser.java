@@ -21,19 +21,13 @@ public class PermissionUser
 {
 
 	@SuppressWarnings("serial")
-	Type groupType = new TypeToken<Map<String, Map<String, Long>>>() {}.getType();
+	private static transient Type groupType = new TypeToken<Map<String, Map<String, Long>>>() {}.getType();
 	@SuppressWarnings("serial")
-	Type permissionType = new TypeToken<List<Permission>>() {}.getType();
+	private static transient Type permissionType = new TypeToken<List<Permission>>() {}.getType();
 
 	private Map<String, Map<String, Long>>	groups;
 	private List<Permission>				permissions;
 
-	public PermissionUser(Map<String, Map<String, Long>> groups, List<Permission> permissions)
-	{
-		this.groups = groups;
-		this.permissions = permissions;
-	}
-	
 	public PermissionUser(JsonObject jsonObject)
 	{
 		groups = GsonUtils.getPrettyGson().fromJson(jsonObject.get("groups"), groupType);
