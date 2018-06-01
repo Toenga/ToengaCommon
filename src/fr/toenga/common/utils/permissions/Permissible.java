@@ -87,9 +87,24 @@ public class Permissible
 		return power;
 	}
 
+	public String getRawData(String data)
+	{
+		return PermissionsManager.I18N_PREFIX_KEY + I18n.SEPARATOR + getName() + I18n.SEPARATOR + data;
+	}
+	
+	public String getRawPrefix()
+	{
+		return getRawData("prefix");
+	}
+	
+	public String getRawSuffix()
+	{
+		return getRawData("suffix");
+	}
+	
 	public String[] getTranslatedData(Locale locale, String data)
 	{
-		return I18n.getInstance().get(locale, PermissionsManager.I18N_PREFIX_KEY + I18n.SEPARATOR + getName() + I18n.SEPARATOR + data);
+		return I18n.getInstance().get(locale, getRawData(data));
 	}
 	
 	public String getPrefix(Locale locale)
