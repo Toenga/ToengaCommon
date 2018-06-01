@@ -3,11 +3,13 @@ package fr.toenga.common.tech.sql.thread;
 import fr.toenga.common.tech.TechThread;
 import fr.toenga.common.tech.sql.SQLService;
 import fr.toenga.common.tech.sql.packet.SQLPacket;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
+@Getter
+@Setter
 public class SQLPacketThread extends TechThread<SQLPacket> 
 {
 

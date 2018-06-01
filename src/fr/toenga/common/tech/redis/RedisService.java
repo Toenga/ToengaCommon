@@ -15,12 +15,14 @@ import fr.toenga.common.tech.redis.setting.RedisSettings;
 import fr.toenga.common.tech.redis.threading.RedisThread;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import redis.clients.jedis.Jedis;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
+@Getter
+@Setter
 public class RedisService extends AutoReconnector
 {
 

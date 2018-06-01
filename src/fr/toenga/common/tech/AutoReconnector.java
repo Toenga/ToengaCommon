@@ -3,11 +3,13 @@ package fr.toenga.common.tech;
 import java.util.TimerTask;
 
 import fr.toenga.common.utils.threading.TimerUtils;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
+@Getter
+@Setter
 public abstract class AutoReconnector extends Service
 {
 	

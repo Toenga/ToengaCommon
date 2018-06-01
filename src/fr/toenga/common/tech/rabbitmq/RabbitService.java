@@ -14,11 +14,13 @@ import fr.toenga.common.tech.rabbitmq.packet.RabbitPacketManager;
 import fr.toenga.common.tech.rabbitmq.setting.RabbitSettings;
 import fr.toenga.common.utils.logs.Log;
 import fr.toenga.common.utils.logs.LogType;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
+@Getter
+@Setter
 public class RabbitService extends AutoReconnector
 {
 	

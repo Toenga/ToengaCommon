@@ -3,11 +3,13 @@ package fr.toenga.common.tech.redis.threading;
 import fr.toenga.common.tech.TechThread;
 import fr.toenga.common.tech.redis.RedisService;
 import fr.toenga.common.tech.redis.methods.RedisMethod;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
+@Getter
+@Setter
 public class RedisThread extends TechThread<RedisMethod> 
 {
 

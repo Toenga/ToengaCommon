@@ -134,7 +134,6 @@ import lombok.Setter;
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void reconnect()
 	{
