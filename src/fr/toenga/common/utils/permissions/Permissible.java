@@ -92,14 +92,14 @@ public class Permissible
 		return PermissionsManager.I18N_PREFIX_KEY + getName() + I18n.SEPARATOR + data;
 	}
 	
-	public String getRawPrefix()
+	public String getRawPrefix(String type)
 	{
-		return getRawData("prefix");
+		return getRawData("prefix_" + type);
 	}
 	
-	public String getRawSuffix()
+	public String getRawSuffix(String type)
 	{
-		return getRawData("suffix");
+		return getRawData("suffix_" + type);
 	}
 	
 	public String[] getTranslatedData(Locale locale, String data)
@@ -107,14 +107,14 @@ public class Permissible
 		return I18n.getInstance().get(locale, getRawData(data));
 	}
 	
-	public String getPrefix(Locale locale)
+	public String getPrefix(Locale locale, String type)
 	{
-		return getTranslatedData(locale, "prefix")[0];
+		return getTranslatedData(locale, "prefix_" + type)[0];
 	}
 	
-	public String getSuffix(Locale locale)
+	public String getSuffix(Locale locale, String type)
 	{
-		return getTranslatedData(locale, "suffix")[0];
+		return getTranslatedData(locale, "suffix_" + type)[0];
 	}
 
 	/**
