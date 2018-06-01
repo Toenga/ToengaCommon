@@ -89,7 +89,7 @@ public class Permissible
 
 	public String getRawData(String data)
 	{
-		return PermissionsManager.I18N_PREFIX_KEY + I18n.SEPARATOR + getName() + I18n.SEPARATOR + data;
+		return PermissionsManager.I18N_PREFIX_KEY + getName() + I18n.SEPARATOR + data;
 	}
 	
 	public String getRawPrefix()
