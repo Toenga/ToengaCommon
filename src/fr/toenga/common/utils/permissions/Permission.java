@@ -13,6 +13,11 @@ public class Permission
 
 	public Permission(String permission)
 	{
+		load(permission);
+	}
+	
+	private void load(String permission)
+	{
 		result = PermissionResult.YES;
 
 		if(permission == null)
@@ -40,12 +45,16 @@ public class Permission
 	{
 		String perm1 = getPermission(), perm2 = permission.getPermission();
 
-		if(perm1.equals(perm2) || ( isAll && perm2.startsWith(perm1) ))
+		if (getResult() == null && getPermission() != null)
+		{
+			load(getPermission());
+		}
+		if(perm1.equals(perm2) || permission.getPermission().equals("*") || ( isAll && perm2.startsWith(perm1) ))
 		{
 			return getResult();
 		}
 
-		return PermissionResult.UNKNOW;
+		return PermissionResult.UNKNOWN;
 	}
 
 	@Override
@@ -60,6 +69,6 @@ public class Permission
 	{
 		YES,
 		NO,
-		UNKNOW;
+		UNKNOWN;
 	}
 }

@@ -33,16 +33,18 @@ public class PermissionSet
 	public PermissionResult hasPermission(Permission permission)
 	{
 		PermissionResult result = null;
-		
-		for(Permission perm : this.permissions)
+
+		for (Permission perm : this.permissions)
 		{
-			result = perm.compare( permission );
-			
-			if(result != PermissionResult.UNKNOW)
+			result = perm.compare(permission);
+
+			if (result != PermissionResult.UNKNOWN)
+			{
 				return result;
+			}
 		}
 		
-		return PermissionResult.UNKNOW;
+		return PermissionResult.UNKNOWN;
 	}
 	
 	public boolean isCompatible(String place)

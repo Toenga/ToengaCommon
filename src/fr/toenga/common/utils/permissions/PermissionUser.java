@@ -11,7 +11,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 
 import fr.toenga.common.utils.general.GsonUtils;
 import fr.toenga.common.utils.permissions.Permission.PermissionResult;
@@ -25,15 +24,14 @@ public class PermissionUser
 
 	@SuppressWarnings("serial")
 	private static transient Type groupType = new TypeToken<Map<String, Map<String, Long>>>() {}.getType();
-	@SuppressWarnings("serial")
-	private static transient Type permissionType = new TypeToken<List<Permission>>() {}.getType();
+	//@SuppressWarnings("serial")
+	//private static transient Type permissionType = new TypeToken<List<Permission>>() {}.getType();
 
 	private Map<String, Map<String, Long>>	groups;
 	private List<Permission>				permissions;
 
 	public PermissionUser(JsonObject jsonObject)
 	{
-		System.out.println(GsonUtils.getPrettyGson().toJson(jsonObject));
 		groups = GsonUtils.getPrettyGson().fromJson(jsonObject.get("groups"), groupType);
 		if (jsonObject.get("permissions").isJsonNull())
 		{
@@ -41,8 +39,7 @@ public class PermissionUser
 		}
 		else
 		{
-			System.out.println(GsonUtils.getPrettyGson().toJson(jsonObject.get("permissions")));
-			//permissions = GsonUtils.getPrettyGson().fromJson(JSON.serialize(), permissionType);
+			//permissions = GsonUtils.getPrettyGson().fromJson(jsonObject.get("permissions").getAsJsonArray().toString(), permissionType);
 		}
 		if (groups == null)
 		{
@@ -76,7 +73,7 @@ public class PermissionUser
 		PermissionResult permissionResult = null;
 		for (Entry<String, Long> entry : g.entrySet())
 		{
-			if (entry.getValue() <= time)
+			if (entry.getValue() > 0 && entry.getValue() <= time)
 			{
 				continue;
 			}

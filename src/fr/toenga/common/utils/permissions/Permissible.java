@@ -34,19 +34,19 @@ public class Permissible
 		this.inheritances = inheritances;
 		this.permissions = permissions;
 	}
-	
+
 	public Permissible()
 	{
 		this.inheritances = new ArrayList<>();
 		this.permissions = new ArrayList<>();
 	}
-	
+
 	public Permissible(JsonObject jsonObject)
 	{
 		inheritances = GsonUtils.getPrettyGson().fromJson(jsonObject.get("inheritances"), inheritanceList);
 		permissions = GsonUtils.getPrettyGson().fromJson(jsonObject.get("permissions"), permissionList);
 	}
-	
+
 	public DBObject getDBObject()
 	{
 		BasicDBObject query = new BasicDBObject();
@@ -54,7 +54,7 @@ public class Permissible
 		query.put("permissions", permissions);
 		return query;
 	}
-	
+
 	/**
 	 * Return the inheritances of the permissible
 	 * @return A collection of permissible
@@ -62,18 +62,18 @@ public class Permissible
 	public Collection<Permissible> getInheritances()
 	{
 		List<Permissible> inheritances = new ArrayList<>();
-		
+
 		for(String inheritance : this.inheritances)
 		{
 			Permissible permissible = PermissionsManager.getManager().getGroup(inheritance);
-			
+
 			if(permissible != null)
 				inheritances.add(permissible);
 		}
-		
+
 		return inheritances;
 	}
-	
+
 	/**
 	 * Check if the permissible has the permission <i>permission</io>
 	 * @param permission The permission label
@@ -83,7 +83,7 @@ public class Permissible
 	{
 		return testPermission( new Permission(permission) ) == PermissionResult.YES;
 	}
-	
+
 	/**
 	 * Test the permission on the permissible.
 	 * @param perm The permission
@@ -91,33 +91,49 @@ public class Permissible
 	 */
 	public PermissionResult testPermission(Permission perm)
 	{
-		PermissionResult finalResult = PermissionResult.UNKNOW, currentResult = null;
-		
-		for(PermissionSet set : permissions)
+		PermissionResult finalResult = PermissionResult.UNKNOWN, currentResult = null;
+
+		for (PermissionSet set : permissions)
 		{
-			if(!set.isCompatible())
+			if (!set.isCompatible())
+			{
 				continue;
+			}
 			
 			currentResult = set.hasPermission(perm);
 			
-			if(currentResult == PermissionResult.NO) return PermissionResult.NO;
-			if(currentResult == PermissionResult.YES) finalResult = PermissionResult.YES;
+			if (currentResult.equals(PermissionResult.NO))
+			{
+				return PermissionResult.NO;
+			}
+			if (currentResult.equals(PermissionResult.YES))
+			{
+				finalResult = PermissionResult.YES;
+			}
 		}
-		
-		if(finalResult == PermissionResult.YES)
+
+		if (finalResult.equals(PermissionResult.YES))
+		{
 			return finalResult;
-		
-		for(Permissible permissible : getInheritances())
+		}
+
+		for (Permissible permissible : getInheritances())
 		{
 			currentResult = permissible.testPermission(perm);
-			
-			if(currentResult == PermissionResult.NO) return PermissionResult.NO;
-			if(currentResult == PermissionResult.YES) finalResult = PermissionResult.YES;
+
+			if (currentResult == PermissionResult.NO)
+			{
+				return PermissionResult.NO;
+			}
+			if (currentResult == PermissionResult.YES)
+			{
+				finalResult = PermissionResult.YES;
+			}
 		}
-		
+
 		return finalResult;
 	}
-	
+
 	/**
 	 * Return the power for <i>label</i> for this permissible.
 	 * @param label The power label
@@ -128,7 +144,7 @@ public class Permissible
 		PermissionSet set = getSetWithMaximalPower(label);
 		return set == null ? 0 : set.getPower(label);
 	}
-	
+
 	/**
 	 * Return the permission set having the biggest power value for <i>label</i>
 	 * @param label The power label
@@ -138,40 +154,40 @@ public class Permissible
 	{
 		int max = -1, currentValue = 0;
 		PermissionSet result = null, currentSet = null;
-		
+
 		for(PermissionSet set : permissions)
 		{
 			if(!set.isCompatible())
 				continue;
-			
+
 			currentValue = set.getPower(label);
-			
+
 			if(currentValue > max)
 			{
 				max = currentValue;
 				result = set;
 			}
 		}
-		
+
 		for(Permissible permissible : getInheritances())
 		{
 			currentSet = permissible.getSetWithMaximalPower(label);
-			
+
 			if(currentSet == null)
 				continue;
-			
+
 			currentValue = currentSet.getPower(label);
-			
+
 			if(currentValue > max)
 			{
 				max = currentValue;
 				result = currentSet;
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Return the value <i>valueLabel</i> of the permissible. The value is taken from the permission set having the biggest power value for <i>powerLabel</i>
 	 * @param powerLabel The power label
