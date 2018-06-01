@@ -51,6 +51,9 @@ public class RabbitThread extends TechThread<RabbitPacket>
 			debugPacket(rabbitPacket);
 			break;
 		}
+		message = null;
+		channel = null;
+		rabbitService = null;
 	}
 
 	@Override

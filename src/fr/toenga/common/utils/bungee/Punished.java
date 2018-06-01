@@ -44,43 +44,44 @@ public class Punished
 
 	public Punished(JsonObject jsonObject)
 	{
-		if (jsonObject.has("ban"))
+		// Shitty workaround
+		if (jsonObject.has("ban") && !jsonObject.get("ban").isJsonNull())
 		{
 			ban = jsonObject.get("ban").getAsBoolean();
 		}
-		if (jsonObject.has("mute"))
+		if (jsonObject.has("mute") && !jsonObject.get("mute").isJsonNull())
 		{
 			mute = jsonObject.get("mute").getAsBoolean();
 		}
-		if (jsonObject.has("banEnd"))
+		if (jsonObject.has("banEnd")&& !jsonObject.get("banEnd").isJsonNull())
 		{
 			banEnd = jsonObject.get("banEnd").getAsLong();
 		}
-		if (jsonObject.has("muteEnd"))
+		if (jsonObject.has("muteEnd") && !jsonObject.get("muteEnd").isJsonNull())
 		{
 			muteEnd = jsonObject.get("muteEnd").getAsLong();
 		}
-		if (jsonObject.has("banReason"))
+		if (jsonObject.has("banReason") && !jsonObject.get("banReason").isJsonNull())
 		{
 			banReason = jsonObject.get("banReason").getAsString();
 		}
-		if (jsonObject.has("muteReason"))
+		if (jsonObject.has("muteReason") && !jsonObject.get("muteReason").isJsonNull())
 		{
 			muteReason = jsonObject.get("muteReason").getAsString();
 		}
-		if (jsonObject.has("banner"))
+		if (jsonObject.has("banner") && !jsonObject.get("banner").isJsonNull())
 		{
 			banner = jsonObject.get("banner").getAsString();
 		}
-		if (jsonObject.has("muter"))
+		if (jsonObject.has("muter") && !jsonObject.get("muter").isJsonNull())
 		{
 			muter = jsonObject.get("muter").getAsString();
 		}
-		if (jsonObject.has("banId"))
+		if (jsonObject.has("banId")&& !jsonObject.get("banId").isJsonNull())
 		{
 			banId = jsonObject.get("banId").getAsInt();
 		}
-		if (jsonObject.has("muteId"))
+		if (jsonObject.has("muteId")&& !jsonObject.get("muteId").isJsonNull())
 		{
 			muteId = jsonObject.get("muteId").getAsInt();
 		}

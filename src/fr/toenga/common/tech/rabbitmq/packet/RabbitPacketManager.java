@@ -72,6 +72,7 @@ public class RabbitPacketManager
 		if (packetManager == null) 
 		{
 			packetManager = new RabbitPacketManager(rabbitService);
+			instances.put(rabbitService, packetManager);
 		}
 		return packetManager;
 	}

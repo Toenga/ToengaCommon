@@ -90,7 +90,7 @@ public class RedisService extends AutoReconnector
 		setDead(true); // Set dead
 		getTask().cancel(); // Cancel AutoReconnector task
 		// Close channel
-		try 
+		/*try 
 		{
 			getJedis().close();
 		}
@@ -99,7 +99,7 @@ public class RedisService extends AutoReconnector
 			Log.log(LogType.ERROR, "[RedisConnector] Something gone wrong while trying to close Redis connection.");
 			error.printStackTrace();
 			return;
-		}
+		}*/
 		RedisConnector.getInstance().getServices().remove(getName());
 		Log.log(LogType.SUCCESS, "[RedisConnector] Redis service disconnected (" + (System.currentTimeMillis() - time) + " ms).");
 	}
