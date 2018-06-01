@@ -12,6 +12,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import fr.toenga.common.utils.general.GsonUtils;
+import fr.toenga.common.utils.i18n.I18n;
+import fr.toenga.common.utils.i18n.Locale;
 import fr.toenga.common.utils.permissions.Permission.PermissionResult;
 
 /**
@@ -26,33 +28,78 @@ public class Permissible
 	@SuppressWarnings("serial")
 	Type permissionList = new TypeToken<List<PermissionSet>>() {}.getType();
 
-	private List<String> inheritances;
-	private List<PermissionSet> permissions;
+	private String				name;
+	private boolean				displayable;
+	private int					power;
+	private List<String>		inheritances;
+	private List<PermissionSet>	permissions;
 
-	public Permissible(List<String> inheritances, List<PermissionSet> permissions)
+	public Permissible(String name, List<String> inheritances, List<PermissionSet> permissions, boolean displayable, int power)
 	{
+		this.name = name;
 		this.inheritances = inheritances;
 		this.permissions = permissions;
+		this.displayable = displayable;
+		this.power = power;
 	}
 
 	public Permissible()
 	{
+		this.name = "default";
 		this.inheritances = new ArrayList<>();
 		this.permissions = new ArrayList<>();
+		this.displayable = true;
+		this.power = 0;
 	}
 
 	public Permissible(JsonObject jsonObject)
 	{
+		name = jsonObject.get("name").getAsString();
 		inheritances = GsonUtils.getPrettyGson().fromJson(jsonObject.get("inheritances"), inheritanceList);
 		permissions = GsonUtils.getPrettyGson().fromJson(jsonObject.get("permissions"), permissionList);
+		displayable = jsonObject.get("displayable").getAsBoolean();
+		power = jsonObject.get("power").getAsInt();
 	}
 
 	public DBObject getDBObject()
 	{
 		BasicDBObject query = new BasicDBObject();
+		query.put("name", name);
 		query.put("inheritances", inheritances);
 		query.put("permissions", permissions);
+		query.put("displayable", displayable);
+		query.put("power", power);
 		return query;
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	public boolean isDisplayable()
+	{
+		return displayable;
+	}
+	
+	public int getPower()
+	{
+		return power;
+	}
+
+	public String[] getTranslatedData(Locale locale, String data)
+	{
+		return I18n.getInstance().get(locale, PermissionsManager.I18N_PREFIX_KEY + I18n.SEPARATOR + getName() + I18n.SEPARATOR + data);
+	}
+	
+	public String getPrefix(Locale locale)
+	{
+		return getTranslatedData(locale, "prefix")[0];
+	}
+	
+	public String getSuffix(Locale locale)
+	{
+		return getTranslatedData(locale, "suffix")[0];
 	}
 
 	/**
@@ -63,12 +110,14 @@ public class Permissible
 	{
 		List<Permissible> inheritances = new ArrayList<>();
 
-		for(String inheritance : this.inheritances)
+		for (String inheritance : this.inheritances)
 		{
 			Permissible permissible = PermissionsManager.getManager().getGroup(inheritance);
 
-			if(permissible != null)
+			if (permissible != null)
+			{
 				inheritances.add(permissible);
+			}
 		}
 
 		return inheritances;
@@ -81,7 +130,7 @@ public class Permissible
 	 */
 	public boolean hasPermission(String permission)
 	{
-		return testPermission( new Permission(permission) ) == PermissionResult.YES;
+		return testPermission(new Permission(permission)) == PermissionResult.YES;
 	}
 
 	/**
@@ -155,9 +204,9 @@ public class Permissible
 		int max = -1, currentValue = 0;
 		PermissionSet result = null, currentSet = null;
 
-		for(PermissionSet set : permissions)
+		for (PermissionSet set : permissions)
 		{
-			if(!set.isCompatible())
+			if (!set.isCompatible())
 				continue;
 
 			currentValue = set.getPower(label);
@@ -169,16 +218,18 @@ public class Permissible
 			}
 		}
 
-		for(Permissible permissible : getInheritances())
+		for (Permissible permissible : getInheritances())
 		{
 			currentSet = permissible.getSetWithMaximalPower(label);
 
-			if(currentSet == null)
+			if (currentSet == null)
+			{
 				continue;
+			}
 
 			currentValue = currentSet.getPower(label);
 
-			if(currentValue > max)
+			if (currentValue > max)
 			{
 				max = currentValue;
 				result = currentSet;

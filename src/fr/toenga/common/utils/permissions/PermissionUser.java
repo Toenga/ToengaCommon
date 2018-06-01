@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonObject;
@@ -51,12 +51,54 @@ public class PermissionUser
 		}
 	}
 
+	public List<String> getValidRanks(String place)
+	{
+		if (!groups.containsKey(place))
+		{
+			return null;
+		}
+		return groups.get(place).entrySet().stream().filter(entry -> entry.getValue() > System.currentTimeMillis() || entry.getValue() <= 0).map(d -> d.getKey()).collect(Collectors.toList());
+	}
+
+	public Permissible getHighestRank(String place, boolean onlyDisplayables)
+	{
+		List<String> g = getValidRanks(place);
+		if (g == null)
+		{
+			return null;
+		}
+
+		Permissible result = null;
+		for (String group : g)
+		{
+			Permissible permissible = PermissionsManager.getManager().getGroup(group);
+			
+			if (permissible == null)
+			{
+				continue;
+			}
+			
+			if (onlyDisplayables && !permissible.isDisplayable())
+			{
+				continue;
+			}
+			
+			if (result == null || permissible.getPower() > result.getPower())
+			{
+				result = permissible;
+			}
+		}
+
+		return result;
+	}
+
 	public boolean hasPermission(String place, String permission)
 	{
 		if (groups == null)
 		{
 			return false;
 		}
+		
 		if (!groups.containsKey(place))
 		{
 			HashMap<String, Long> map = new HashMap<>();
@@ -64,20 +106,19 @@ public class PermissionUser
 			groups.put(place, map);
 			return false;
 		}
-		Map<String, Long> g = groups.get(place);
+		
+		List<String> g = getValidRanks(place);
+		
 		if (g == null)
 		{
 			return false;
 		}
-		long time = System.currentTimeMillis();
+		
 		PermissionResult permissionResult = null;
-		for (Entry<String, Long> entry : g.entrySet())
+		
+		for (String group : g)
 		{
-			if (entry.getValue() > 0 && entry.getValue() <= time)
-			{
-				continue;
-			}
-			Permissible permissible = PermissionsManager.getManager().getGroup(entry.getKey());
+			Permissible permissible = PermissionsManager.getManager().getGroup(group);
 			if (permissible == null)
 			{
 				continue;
@@ -89,6 +130,7 @@ public class PermissionUser
 				return true;
 			}
 		}
+		
 		return false;
 	}
 

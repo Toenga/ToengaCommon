@@ -17,9 +17,11 @@ public class I18n
 {
 	
 	@Getter@Setter
-	private static I18n	instance	= new I18n();
+	private static I18n	instance				= new I18n();
 	
-	private final static Locale   def = Locale.FRENCH_FRANCE;
+	private final static Locale		def 		= Locale.FRENCH_FRANCE;
+	public final static char		SEPARATOR	= '.';
+	
 	private Map<Locale, Language> languages;
 
 	public I18n()

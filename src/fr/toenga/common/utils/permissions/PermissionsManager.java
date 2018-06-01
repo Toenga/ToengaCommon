@@ -5,10 +5,14 @@ import java.util.Map;
 import com.google.gson.JsonObject;
 
 import fr.toenga.common.utils.general.GsonUtils;
+import fr.toenga.common.utils.i18n.I18n;
 import lombok.Getter;
 
 public class PermissionsManager
 {
+	
+	public static final String			I18N_PREFIX_KEY = "permissions" + I18n.SEPARATOR;
+	
 	@Getter
 	private static PermissionsManager manager;
 	

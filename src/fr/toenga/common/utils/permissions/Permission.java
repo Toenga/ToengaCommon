@@ -49,6 +49,7 @@ public class Permission
 		{
 			load(getPermission());
 		}
+		
 		if(perm1.equals(perm2) || permission.getPermission().equals("*") || ( isAll && perm2.startsWith(perm1) ))
 		{
 			return getResult();
